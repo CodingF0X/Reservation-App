@@ -34,7 +34,7 @@ export class ReservationService {
   ): Promise<Reservation> {
     return await this.reservationsRepository.findOneAndUpdate(
       { _id: id },
-      updateReservationDto,
+      {$set: updateReservationDto}
     );
   }
 
