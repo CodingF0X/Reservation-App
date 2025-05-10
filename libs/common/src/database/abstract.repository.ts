@@ -41,7 +41,7 @@ export abstract class AbstractRepository<T extends AbstractDocument> {
       throw new NotFoundException(`Document Not Found`);
     }
 
-    return updatedDocument;
+    return updatedDocument as T;
   }
 
   async find(filterQuery: FilterQuery<T>): Promise<T[]> {

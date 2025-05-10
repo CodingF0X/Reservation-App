@@ -10,7 +10,9 @@ export class ReservationService {
     private readonly reservationsRepository: ReservationsRepository,
   ) {}
 
-  async create(createReservationDto: CreateReservationDto) : Promise<Reservation> {
+  async create(
+    createReservationDto: CreateReservationDto,
+  ): Promise<Reservation> {
     return await this.reservationsRepository.create({
       ...createReservationDto,
       timestamp: new Date(),
@@ -18,19 +20,25 @@ export class ReservationService {
     });
   }
 
-  findAll() {
-    return `This action returns all reservation`;
+  async findAll(): Promise<Reservation[]> {
+    return await this.reservationsRepository.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} reservation`;
+  async findOne(id: string): Promise<Reservation> {
+    return await this.reservationsRepository.findOne({ _id: id });
   }
 
-  update(id: number, updateReservationDto: UpdateReservationDto) {
-    return `This action updates a #${id} reservation`;
+  async update(
+    id: string,
+    updateReservationDto: UpdateReservationDto,
+  ): Promise<Reservation> {
+    return await this.reservationsRepository.findOneAndUpdate(
+      { _id: id },
+      updateReservationDto,
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} reservation`;
+  async remove(id: string) {
+    return await this.reservationsRepository.findOneAndDelete({ _id: id });
   }
 }
