@@ -1,4 +1,18 @@
 services:
+
+  auth:
+    build: 
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: npm run start:dev auth
+    env_file:
+      - .env
+    ports:
+      - '3001:3001'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
   reservations:
     build: 
       context: .
@@ -8,8 +22,23 @@ services:
     env_file:
       - ./apps/reservations/.env
     ports:
-      - '3000:3000'
+      - '3002:3002'
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  payments:
+    build: 
+      context: .
+      dockerfile: ./apps/payments/Dockerfile
+      target: development
+    command: npm run start:dev payments
+    env_file:
+      - ./apps/payments/.env
+    ports:
+      - '3003:3003'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
   mongo:
     image: mongo
