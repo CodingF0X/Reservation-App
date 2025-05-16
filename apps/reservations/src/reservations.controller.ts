@@ -13,7 +13,7 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { JwtAuthGuard, Role, Roles, RolesGuard } from '@app/common';
 
-@Controller('reservation')
+@Controller({ path: 'reservations', version: '1' })
 export class ReservationsController {
   constructor(private readonly reservationService: ReservationService) {}
 
