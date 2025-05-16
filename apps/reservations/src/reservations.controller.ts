@@ -11,19 +11,22 @@ import {
 import { ReservationService } from './reservation.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
-import { JwtAuthGuard } from '@app/common';
+import { JwtAuthGuard, Role, Roles, RolesGuard } from '@app/common';
 
 @Controller('reservation')
 export class ReservationsController {
   constructor(private readonly reservationService: ReservationService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User, Role.Admin)
   async create(@Body() createReservationDto: CreateReservationDto) {
     return await this.reservationService.create(createReservationDto);
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
   findAll() {
     return this.reservationService.findAll();
   }

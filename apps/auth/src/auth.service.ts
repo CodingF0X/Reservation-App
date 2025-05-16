@@ -24,6 +24,7 @@ export class AuthService {
     const tokenPayload: JwtPayload = {
       _id: user._id.toHexString(), // or to.String() as both deliver the same performance
       email: user.email,
+      role: user.role,
     };
 
     const accessToken = this.jwtService.sign(tokenPayload);
@@ -33,7 +34,7 @@ export class AuthService {
     });
   }
 
- logout(response: Response) {
+  logout(response: Response) {
     response.cookie('Authentication', '', {
       httpOnly: true,
       expires: new Date(),

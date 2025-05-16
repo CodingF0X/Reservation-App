@@ -6,6 +6,9 @@ import { LoggerModule } from 'nestjs-pino';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RolesGuard } from '@app/common';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -43,6 +46,16 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard, // globally enforce JWT
+    // },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: RolesGuard, // globally enforce roles when @Roles() used
+    // },
+  ],
 })
 export class AuthModule {}
