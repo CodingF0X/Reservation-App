@@ -1,11 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/draftr/src",
+  "sourceRoot": "apps/auth/src",
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/draftr/tsconfig.app.json"
+    "tsConfigPath": "apps/auth/tsconfig.app.json"
   },
   "projects": {
     "auth": {
@@ -26,13 +26,13 @@
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
     },
-    "draftr": {
+    "payments": {
       "type": "application",
-      "root": "apps/draftr",
+      "root": "apps/payments",
       "entryFile": "main",
-      "sourceRoot": "apps/draftr/src",
+      "sourceRoot": "apps/payments/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/draftr/tsconfig.app.json"
+        "tsConfigPath": "apps/payments/tsconfig.app.json"
       }
     },
     "reservations": {
@@ -46,5 +46,5 @@
     }
   },
   "monorepo": true,
-  "root": "apps/draftr"
+  "root": "apps/auth"
 }
