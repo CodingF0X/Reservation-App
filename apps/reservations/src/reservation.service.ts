@@ -3,7 +3,7 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ReservationsRepository } from './reservations.repository';
 import { Reservation } from './entities/reservation.entity';
-import { SERVICE } from '@app/common';
+import { ReservationProcessedDto, SERVICE } from '@app/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { from, map, mergeMap, tap } from 'rxjs';
 import { UserDto } from './dto/user.dto';
@@ -29,7 +29,7 @@ export class ReservationService {
     };
 
     try {
-              //1- send that exact object to Stripe microservice
+      //1- send that exact object to Stripe microservice
       return this.paymentsService.send('create_charge', paymentMsg).pipe(
         //2- when Stripe replies, create the reservation in Mongo
         mergeMap((stripeRes) =>
@@ -40,17 +40,21 @@ export class ReservationService {
               userId: userId,
               invoiceId: stripeRes.id,
             }),
-          ).pipe( //3- once you have the reservation, build your notification payload
+          ).pipe(
+            //3- once you have the reservation, build your notification payload
             map((mmea) => ({
               payment: paymentMsg, // the original message
-              reservation: mmea,   // the newly‐created reservation
-              stripe: stripeRes,   // <<optionally>> include Stripe’s response
+              reservation: mmea, // the newly‐created reservation
+              //stripe: stripeRes, // <<optionally>> include Stripe’s response
             })),
-            tap((fullMsg) => // 4- emit that entire bundle to notificationsService
-              this.notificationsService.emit(
-                'reservation_notification',
-                fullMsg,
-              ),
+            tap(
+              (
+                fullMsg: ReservationProcessedDto, // 4- emit that entire bundle to notificationsService
+              ) =>
+                this.notificationsService.emit(
+                  'reservation_notification',
+                  fullMsg,
+                ),
             ),
           ),
         ),

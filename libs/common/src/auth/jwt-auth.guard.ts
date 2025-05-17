@@ -34,7 +34,9 @@ export class JwtAuthGuard implements CanActivate {
           context.switchToHttp().getRequest().user = res;
         }),
         map(() => true),
-        catchError(()=> of(false)),
+        catchError(() => {
+          throw new UnauthorizedException('Token not found');
+        }),
       );
   }
 }
