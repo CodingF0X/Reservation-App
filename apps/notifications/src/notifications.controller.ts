@@ -10,7 +10,7 @@ export class NotificationsController {
 
   @EventPattern('reservation_notification')
   getHello(@Payload() data: ReservationProcessedDto) {
-    console.log(data)
-    // return this.notificationsService.notifyEmail(data);
+    // const email = data.payment.email;
+    return this.notificationsService.notifyEmail(data);
   }
 }
