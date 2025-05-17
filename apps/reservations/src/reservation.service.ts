@@ -5,7 +5,8 @@ import { ReservationsRepository } from './reservations.repository';
 import { Reservation } from './entities/reservation.entity';
 import { SERVICE } from '@app/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { map, tap } from 'rxjs';
+import { from, map, mergeMap, tap } from 'rxjs';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class ReservationService {
@@ -18,24 +19,42 @@ export class ReservationService {
     private readonly notificationsService: ClientProxy,
   ) {}
 
-  async create(createReservationDto: CreateReservationDto) {
+  async create(
+    createReservationDto: CreateReservationDto,
+    { email, userId }: UserDto,
+  ) {
+    const paymentMsg = {
+      ...createReservationDto.charge,
+      email,
+    };
+
     try {
-      return this.paymentsService
-        .send('create_charge', createReservationDto.charge)
-        .pipe(
-          map((res) => {
-            return this.reservationsRepository.create({
+              //1- send that exact object to Stripe microservice
+      return this.paymentsService.send('create_charge', paymentMsg).pipe(
+        //2- when Stripe replies, create the reservation in Mongo
+        mergeMap((stripeRes) =>
+          from(
+            this.reservationsRepository.create({
               ...createReservationDto,
               timestamp: new Date(),
-              userId: '123',
-              invoiceId: res.id,
-            });
-          }),
-          tap((res) => {
-            console.log()
-            this.notificationsService.emit('notification',res);
-          }),
-        );
+              userId: userId,
+              invoiceId: stripeRes.id,
+            }),
+          ).pipe( //3- once you have the reservation, build your notification payload
+            map((mmea) => ({
+              payment: paymentMsg, // the original message
+              reservation: mmea,   // the newly‐created reservation
+              stripe: stripeRes,   // <<optionally>> include Stripe’s response
+            })),
+            tap((fullMsg) => // 4- emit that entire bundle to notificationsService
+              this.notificationsService.emit(
+                'reservation_notification',
+                fullMsg,
+              ),
+            ),
+          ),
+        ),
+      );
     } catch (error) {
       this.logger.error(error);
     }

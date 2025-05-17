@@ -32,7 +32,7 @@ import { ConfigService } from '@nestjs/config';
             port: configService.getOrThrow('RESERVATION_TCP_PORT'),
           },
         }),  
-      }
+      },
     ])
   ],
   controllers: [PaymentsController],
