@@ -20,8 +20,8 @@ export class ReservationsController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.User, Role.Admin)
-  async create(@Body() createReservationDto: CreateReservationDto) {
-    return await this.reservationService.create(createReservationDto);
+  create(@Body() createReservationDto: CreateReservationDto) {
+    return this.reservationService.create(createReservationDto);
   }
 
   @Get()

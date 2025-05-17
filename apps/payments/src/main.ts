@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(PaymentsModule, { bufferLogs: true });
 
   const conifgService = app.get(ConfigService);
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useLogger(app.get(Logger));
   app.use(cookieParser());
 
@@ -23,12 +23,8 @@ async function bootstrap() {
   });
 
   await app.startAllMicroservices();
-  await app.listen(conifgService.getOrThrow('PAYMENTS_HTTP_PORT'));
+  //await app.listen(conifgService.getOrThrow('PAYMENTS_HTTP_PORT'));
 
-  console.log(
-    `HTTP server listening on ${conifgService.getOrThrow<number>(
-      'PAYMENTS_HTTP_PORT',
-    )}, TCP on ${conifgService.get<number>('PAYMENTS_TCP_PORT')}`,
-  );
+  console.log(`TCP on ${conifgService.get<number>('PAYMENTS_TCP_PORT')}`);
 }
 bootstrap();
