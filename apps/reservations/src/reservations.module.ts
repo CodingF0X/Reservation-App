@@ -50,6 +50,17 @@ import { ConfigService } from '@nestjs/config';
           },
         }),
       },
+      {
+        name: SERVICE.NOTIFICATIONS_SERVICE,
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('NOTIFICATIONS_HOST'),
+            port: configService.get('NOTIFICATIONS_TCP_PORT'),
+          },
+        }),
+      },
     ]),
   ],
   controllers: [ReservationsController],

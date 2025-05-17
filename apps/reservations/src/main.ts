@@ -27,7 +27,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useLogger(app.get(Logger));
   app.use(cookieParser());
-  app.startAllMicroservices()
+  await app.startAllMicroservices()
   await app.listen(configService.getOrThrow('RESERVATION_HTTP_PORT'));
 }
 bootstrap();

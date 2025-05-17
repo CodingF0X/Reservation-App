@@ -5,7 +5,7 @@ import { ReservationsRepository } from './reservations.repository';
 import { Reservation } from './entities/reservation.entity';
 import { SERVICE } from '@app/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 
 @Injectable()
 export class ReservationService {
@@ -14,6 +14,8 @@ export class ReservationService {
     private readonly reservationsRepository: ReservationsRepository,
     @Inject(SERVICE.PAYEMENTS_SERVICE)
     private readonly paymentsService: ClientProxy,
+    @Inject(SERVICE.NOTIFICATIONS_SERVICE)
+    private readonly notificationsService: ClientProxy,
   ) {}
 
   async create(createReservationDto: CreateReservationDto) {
@@ -28,6 +30,10 @@ export class ReservationService {
               userId: '123',
               invoiceId: res.id,
             });
+          }),
+          tap((res) => {
+            console.log()
+            this.notificationsService.emit('notification',res);
           }),
         );
     } catch (error) {
