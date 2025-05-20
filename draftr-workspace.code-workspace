@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "draftr/apps/auth"
+		},
+		{
+			"path": "draftr/apps/reservations"
+		},
+		{
+			"path": "draftr"
+		}
+	],
+	"settings": {}
+}
