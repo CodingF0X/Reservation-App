@@ -7,7 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { RolesGuard } from '@app/common';
+import { EurekaClientModule, RolesGuard } from '@app/common';
 import { APP_GUARD } from '@nestjs/core';
 
 @Module({
@@ -44,6 +44,43 @@ import { APP_GUARD } from '@nestjs/core';
         },
       },
     ]),
+    EurekaClientModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        instance: {
+          app: configService.getOrThrow<string>('AUTH_SERVICE'),
+          hostName: configService.getOrThrow<string>(
+            'AUTH_SERVICE_PORT',
+          ),
+          instanceId: configService.getOrThrow<string>('AUTH_SERVICE'),
+          ipAddr: configService.getOrThrow<string>(
+            'AUTH_SERVICE_ipAddr',
+          ),
+          port: {
+            $: Number(
+              configService.getOrThrow<number>('AUTH_SERVICE_PORT'),
+            ),
+            '@enabled': true,
+          },
+          vipAddress: configService.getOrThrow<string>('AUTH_SERVICE'),
+          dataCenterInfo: {
+            '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+            name: 'MyOwn',
+          },
+        },
+        eureka: {
+          host: configService.getOrThrow<string>('EUREKA_SERVER_HOST'),
+          port: configService.getOrThrow<number>('EUREKA_SERVER_PORT'),
+          fetchRegistry: true,
+          registryFetchInterval: 10000,
+          maxRetries: 5,
+          requestRetryDelay: 10000,
+          heartbeatInterval: 1000,
+          servicePath: '/eureka/apps/',
+        },
+        shouldUseDelta: true,
+      }),
+    }),
   ],
   controllers: [AuthController],
   providers: [

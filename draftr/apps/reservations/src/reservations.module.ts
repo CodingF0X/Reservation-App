@@ -1,5 +1,10 @@
 import { Inject, Module } from '@nestjs/common';
-import { ConfigModule, DatabaseModule, SERVICE } from '@app/common';
+import {
+  ConfigModule,
+  DatabaseModule,
+  EurekaClientModule,
+  SERVICE,
+} from '@app/common';
 import { ReservationService } from './reservation.service';
 import { ReservationsController } from './reservations.controller';
 import { ReservationsRepository } from './reservations.repository';
@@ -62,6 +67,38 @@ import { ConfigService } from '@nestjs/config';
         }),
       },
     ]),
+
+    EurekaClientModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        instance: {
+          app: configService.getOrThrow<string>('RESERVATIONS_SERVICE'),
+          hostName: configService.getOrThrow<string>('RESERVATIONS_SERVICE_PORT'),
+          instanceId: configService.getOrThrow<string>('RESERVATIONS_SERVICE'),
+          ipAddr: configService.getOrThrow<string>('RESERVATIONS_SERVICE_ipAddr'),
+          port: {
+            $: Number(configService.getOrThrow<number>('RESERVATIONS_SERVICE_PORT')),
+            '@enabled': true,
+          },
+          vipAddress: configService.getOrThrow<string>('RESERVATIONS_SERVICE'),
+          dataCenterInfo: {
+            '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+            name: 'MyOwn',
+          },
+        },
+        eureka: {
+          host: configService.getOrThrow<string>('EUREKA_SERVER_HOST'),
+          port: configService.getOrThrow<number>('EUREKA_SERVER_PORT'),
+          fetchRegistry: true,
+          registryFetchInterval: 10000,
+          maxRetries: 5,
+          requestRetryDelay: 10000,
+          heartbeatInterval: 1000,
+          servicePath: '/eureka/apps/',
+        },
+        shouldUseDelta: true
+      }),
+    }),
   ],
   controllers: [ReservationsController],
   providers: [ReservationService, ReservationsRepository],
