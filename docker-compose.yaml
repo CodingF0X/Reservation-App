@@ -2,7 +2,7 @@ services:
 
   auth:
     build: 
-      context: .
+      context: ./apps/auth
       dockerfile: ./apps/auth/Dockerfile
       target: development
     command: npm run start:dev auth
@@ -12,10 +12,10 @@ services:
       - '3001:3001'
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./node_modules:/usr/src/app/node_modules
   reservations:
     build: 
-      context: .
+      context: ./apps/reservations
       dockerfile: ./apps/reservations/Dockerfile
       target: development
     command: npm run start:dev reservations
@@ -25,11 +25,11 @@ services:
       - '3002:3002'
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./node_modules:/usr/src/app/node_modules
 
   payments:
     build: 
-      context: .
+      context: ./apps/payments
       dockerfile: ./apps/payments/Dockerfile
       target: development
     command: npm run start:dev payments
@@ -39,6 +39,6 @@ services:
       - '3003:3003'
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./node_modules:/usr/src/app/node_modules
   mongo:
     image: mongo
