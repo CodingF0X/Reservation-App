@@ -1,0 +1,17 @@
+# apps/reservations/Dockerfile.dev
+
+FROM node:24-alpine
+
+WORKDIR /usr/src/app
+
+# Copy only package.json + lockfile, so install runs only when those change
+COPY package*.json ./
+RUN npm install
+
+# Copy just this service’s code
+COPY apps/notifications ./apps/notifications
+
+WORKDIR /usr/src/app/apps/notifications
+
+# Use Nest’s watch mode for live reload
+CMD ["npm", "run", "start:dev", "notifications"]
