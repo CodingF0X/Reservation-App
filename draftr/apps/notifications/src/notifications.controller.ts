@@ -11,6 +11,7 @@ export class NotificationsController {
   @EventPattern('reservation_notification')
   getHello(@Payload() data: ReservationProcessedDto) {
     // const email = data.payment.email;
-    return this.notificationsService.notifyEmail(data);
+    // return this.notificationsService.notifyEmail(data);
+    return this.notificationsService.mockNotifyEmail(data);
   }
 }
