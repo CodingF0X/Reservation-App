@@ -25,6 +25,7 @@ async function bootstrap() {
   });
 
   await app.startAllMicroservices();
+  await app.listen(conifgService.getOrThrow('NOTIFICATIONS_HTTP_PORT'));
 
 }
 bootstrap();

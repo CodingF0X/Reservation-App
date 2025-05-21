@@ -12,6 +12,8 @@ import { Reservation, reservationModel } from './entities/reservation.entity';
 import { LoggerModule } from 'nestjs-pino';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -68,16 +70,34 @@ import { ConfigService } from '@nestjs/config';
       },
     ]),
 
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
+
+    PrometheusModule.register({
+      path: '/metrics',
+      defaultMetrics: {
+        enabled: true,
+      },
+    }),
+
     EurekaClientModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         instance: {
           app: configService.getOrThrow<string>('RESERVATIONS_SERVICE'),
-          hostName: configService.getOrThrow<string>('RESERVATIONS_SERVICE_PORT'),
+          hostName: configService.getOrThrow<string>(
+            'RESERVATIONS_SERVICE_PORT',
+          ),
           instanceId: configService.getOrThrow<string>('RESERVATIONS_SERVICE'),
-          ipAddr: configService.getOrThrow<string>('RESERVATIONS_SERVICE_ipAddr'),
+          ipAddr: configService.getOrThrow<string>(
+            'RESERVATIONS_SERVICE_ipAddr',
+          ),
           port: {
-            $: Number(configService.getOrThrow<number>('RESERVATIONS_SERVICE_PORT')),
+            $: Number(
+              configService.getOrThrow<number>('RESERVATIONS_SERVICE_PORT'),
+            ),
             '@enabled': true,
           },
           vipAddress: configService.getOrThrow<string>('RESERVATIONS_SERVICE'),
@@ -96,7 +116,7 @@ import { ConfigService } from '@nestjs/config';
           heartbeatInterval: 1000,
           servicePath: '/eureka/apps/',
         },
-        shouldUseDelta: true
+        shouldUseDelta: true,
       }),
     }),
   ],

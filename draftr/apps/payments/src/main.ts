@@ -23,7 +23,7 @@ async function bootstrap() {
   });
 
   await app.startAllMicroservices();
-  //await app.listen(conifgService.getOrThrow('PAYMENTS_HTTP_PORT'));
+  await app.listen(conifgService.getOrThrow('PAYMENTS_HTTP_PORT'));
 
   console.log(`TCP on ${conifgService.get<number>('PAYMENTS_TCP_PORT')}`);
 }

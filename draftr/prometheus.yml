@@ -1,0 +1,41 @@
+global:
+  scrape_interval: 15s 
+
+scrape_configs:
+  - job_name: 'auth-app'
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - host.docker.internal:3001
+        labels:
+          service_name: 'auth' 
+          environment: 'development'
+
+  - job_name: 'reservations-service'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['host.docker.internal:3002']
+        labels:
+          service_name: 'reservations'
+          environment: 'development'
+
+  - job_name: 'payments-service'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['host.docker.internal:3003']
+        labels:
+          service_name: 'payments'
+          environment: 'development'
+
+  - job_name: 'notifications-service'
+    metrics_path: /metrics
+    static_configs:
+      - targets: 
+          - host.docker.internal:3004
+        labels:
+          service_name: 'notifications'
+          environment: 'development'
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090'] 

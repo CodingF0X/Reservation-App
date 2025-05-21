@@ -9,6 +9,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { EurekaClientModule, RolesGuard } from '@app/common';
 import { APP_GUARD } from '@nestjs/core';
+import { HttpModule } from '@nestjs/axios';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -22,16 +24,39 @@ import { APP_GUARD } from '@nestjs/core';
         },
       }),
     }),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            singleLine: true,
-            autoLogging: false,
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        pinoHttp: {
+          transport: {
+            targets: [
+              // send logs to Loki
+              // {
+              //   target: 'pino-loki',
+              //   options: {
+              //     host: configService.getOrThrow<string>('LOKI_URL'),
+              //     labels: { app: 'auth-service', env: 'development' },
+              //     batching: true,
+              //     interval: 5,
+              //   },
+              // },
+              // keeping pretty-printing for local development
+              {
+                target: 'pino-pretty',
+                options: { singleLine: true, autoLogging: false },
+              },
+            ],
           },
         },
-      },
+      }),
+    }),
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
+
+    PrometheusModule.register({
+      path: '/metrics',
     }),
 
     ClientsModule.register([
@@ -49,17 +74,11 @@ import { APP_GUARD } from '@nestjs/core';
       useFactory: (configService: ConfigService) => ({
         instance: {
           app: configService.getOrThrow<string>('AUTH_SERVICE'),
-          hostName: configService.getOrThrow<string>(
-            'AUTH_SERVICE_PORT',
-          ),
+          hostName: configService.getOrThrow<string>('AUTH_SERVICE_PORT'),
           instanceId: configService.getOrThrow<string>('AUTH_SERVICE'),
-          ipAddr: configService.getOrThrow<string>(
-            'AUTH_SERVICE_ipAddr',
-          ),
+          ipAddr: configService.getOrThrow<string>('AUTH_SERVICE_ipAddr'),
           port: {
-            $: Number(
-              configService.getOrThrow<number>('AUTH_SERVICE_PORT'),
-            ),
+            $: Number(configService.getOrThrow<number>('AUTH_SERVICE_PORT')),
             '@enabled': true,
           },
           vipAddress: configService.getOrThrow<string>('AUTH_SERVICE'),

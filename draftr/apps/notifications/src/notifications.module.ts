@@ -5,6 +5,8 @@ import { ConfigModule, EurekaClientModule, SERVICE } from '@app/common';
 import { LoggerModule } from 'nestjs-pino';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -18,6 +20,18 @@ import { ConfigService } from '@nestjs/config';
             autoLogging: false,
           },
         },
+      },
+    }),
+
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
+
+    PrometheusModule.register({
+      path: '/metrics',
+      defaultMetrics: {
+        enabled: true,
       },
     }),
 
