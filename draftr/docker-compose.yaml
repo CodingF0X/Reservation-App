@@ -69,6 +69,11 @@ services:
       - '9090:9090'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yaml:ro
+    depends_on: # Ensure Prometheus starts after your application services
+      - auth
+      - reservations
+      - payments
+      - notifications
 
   grafana:
     image: grafana/grafana
