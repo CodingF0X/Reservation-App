@@ -2,24 +2,26 @@ services:
 
   auth:
     build: 
-      context: ./apps/auth
-      dockerfile: ./apps/auth/Dockerfile.dev
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
       target: development
     command: npm run start:dev auth
     env_file:
       - .env
+      - ./apps/auth/.env
     ports:
       - '3001:3001'
     volumes:
       - .:/usr/src/app
   reservations:
     build: 
-      context: ./apps/reservations
-      dockerfile: ./apps/reservations/Dockerfile.dev
+      context: .
+      dockerfile: ./apps/reservations/Dockerfile
       target: development
     command: npm run start:dev reservations
     env_file:
       - .env
+      - ./apps/reservations/.env
     ports:
       - '3002:3002'
     volumes:
@@ -27,15 +29,57 @@ services:
 
   payments:
     build: 
-      context: ./apps/payments
-      dockerfile: ./apps/payments/Dockerfile.dev
+      context: .
+      dockerfile: ./apps/payments/Dockerfile
       target: development
     command: npm run start:dev payments
     env_file:
       - .env
+      - ./apps/payments/.env
     ports:
       - '3003:3003'
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  notifications:
+    build: 
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: npm run start:dev notifications
+    env_file:
+      - .env
+      - ./apps/notifications/.env
+    ports:
+      - '3004:3004'
+    volumes:
+      - .:/usr/src/app
+
+# GRAFANA TOOLS
+  loki:
+    image: grafana/loki
+    ports:
+      - '3100:3100'
+    command: -config.file=/etc/loki/local-config.yaml
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yaml:ro
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - '3000:3000'
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      # point Grafana at our Prometheus container by its Docker network alias
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-piechart-panel
+    depends_on:
+      - loki
+      - prometheus
   mongo:
     image: mongo
