@@ -6,7 +6,8 @@ scrape_configs:
     metrics_path: /metrics
     static_configs:
       - targets:
-          - host.docker.internal:3001
+          # - host.docker.internal:3001
+            - auth:3001
         labels:
           service_name: 'auth' 
           environment: 'development'
@@ -14,7 +15,9 @@ scrape_configs:
   - job_name: 'reservations-service'
     metrics_path: /metrics
     static_configs:
-      - targets: ['host.docker.internal:3002']
+      - targets: 
+          # - host.docker.internal:3002
+          - reservations:3002
         labels:
           service_name: 'reservations'
           environment: 'development'
@@ -22,7 +25,9 @@ scrape_configs:
   - job_name: 'payments-service'
     metrics_path: /metrics
     static_configs:
-      - targets: ['host.docker.internal:3003']
+      - targets: 
+          # - host.docker.internal:3003
+          - payments:3003
         labels:
           service_name: 'payments'
           environment: 'development'
@@ -31,11 +36,13 @@ scrape_configs:
     metrics_path: /metrics
     static_configs:
       - targets: 
-          - host.docker.internal:3004
+          # - host.docker.internal:3004
+            - notifications:3004
         labels:
           service_name: 'notifications'
           environment: 'development'
 
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['localhost:9090'] 
+      - targets: 
+          - prometheus:9090

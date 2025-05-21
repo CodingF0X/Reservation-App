@@ -40,7 +40,7 @@ services:
       - '3003:3003'
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules
+      # - /usr/src/app/node_modules
 
   notifications:
     build: 
@@ -69,7 +69,7 @@ services:
       - '9090:9090'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yaml:ro
-    depends_on: # Ensure Prometheus starts after your application services
+    depends_on:
       - auth
       - reservations
       - payments

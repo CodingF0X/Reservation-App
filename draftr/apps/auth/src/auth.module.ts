@@ -31,15 +31,15 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
           transport: {
             targets: [
               // send logs to Loki
-              // {
-              //   target: 'pino-loki',
-              //   options: {
-              //     host: configService.getOrThrow<string>('LOKI_URL'),
-              //     labels: { app: 'auth-service', env: 'development' },
-              //     batching: true,
-              //     interval: 5,
-              //   },
-              // },
+              {
+                target: 'pino-loki',
+                options: {
+                  host: configService.getOrThrow<string>('LOKI_URL'),
+                  labels: { app: 'auth-service', env: 'development' },
+                  batching: true,
+                  interval: 5,
+                },
+              },
               // keeping pretty-printing for local development
               {
                 target: 'pino-pretty',

@@ -22,16 +22,31 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     DatabaseModule.forFeature([
       { name: Reservation.name, schema: reservationModel },
     ]),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            singleLine: true,
-            autoLogging: false,
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        pinoHttp: {
+          transport: {
+            targets: [
+              // send logs to Loki
+              {
+                target: 'pino-loki',
+                options: {
+                  host: configService.getOrThrow<string>('LOKI_URL'),
+                  labels: { app: 'reservations-service', env: 'development' },
+                  batching: true,
+                  interval: 5,
+                },
+              },
+              // keeping pretty-printing for local development
+              {
+                target: 'pino-pretty',
+                options: { singleLine: true, autoLogging: false },
+              },
+            ],
           },
         },
-      },
+      }),
     }),
 
     ClientsModule.registerAsync([
