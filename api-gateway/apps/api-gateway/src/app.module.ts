@@ -4,7 +4,10 @@ import { AppService } from './app.service';
 import { GatewayModule } from './gateway/gateway.module';
 import { LoggerModule } from 'nestjs-pino';
 import { ConfigService } from '@nestjs/config';
-import { ConfigModule } from '@app/common';
+import { ConfigModule, SERVICES } from '@app/common';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard, RolesGuard } from '@app/common/auth';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -36,8 +39,33 @@ import { ConfigModule } from '@app/common';
         },
       }),
     }),
+
+    ClientsModule.registerAsync([
+      {
+        name: SERVICES.AUTH_SERVICE,
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: configService.getOrThrow<string>('AUTH_HOST'),
+            port: configService.getOrThrow<number>('AUTH_TCP_PORT'),
+          },
+        }),
+      },
+    ]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard, // globally enforce JWT
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard, // globally enforce roles when @Roles() used
+    },
+  ],
 })
 export class AppModule {}
