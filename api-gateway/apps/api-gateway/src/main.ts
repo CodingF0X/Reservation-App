@@ -7,7 +7,10 @@ import * as cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+    cors: true,
+  });
 
   app.enableVersioning({
     type: VersioningType.URI,
