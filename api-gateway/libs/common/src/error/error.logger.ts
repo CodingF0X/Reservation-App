@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Logger } from '@nestjs/common';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 export function handleError(
   error: AxiosError,
   logger: Logger,
   serviceURL: string,
-): { status: number; data: any } {
+): AxiosResponse {
   if (axios.isAxiosError(error)) {
     logger.error(
       `Axios Error forwarding request to ${serviceURL}:`,
