@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { LoginDto } from './dto/login.dto';
@@ -23,9 +16,7 @@ export class AuthController {
     @RouteInfoDecorator() route: RouteInfo,
     @Body() body: RegisterDto,
   ) {
-    const result = await this.authService.forwardReq(req, route, {
-      data: body,
-    });
+    const result = await this.authService.register(req, route, body);
     res.status(result.status).send(result.data);
     return result;
   }
@@ -37,11 +28,7 @@ export class AuthController {
     @RouteInfoDecorator() route: RouteInfo,
     @Body() body: LoginDto,
   ) {
-    const result = await this.authService.forwardReq(req, route, {
-      withCredentials: true,
-      validateStatus: () => true,
-      data: body,
-    });
+    const result = await this.authService.login(req, route, body);
 
     const setCookie = result.headers['set-cookie'];
     if (setCookie) {
@@ -57,7 +44,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @RouteInfoDecorator() route: RouteInfo,
   ) {
-    const result = await this.authService.forwardReq(req, route);
+    const result = await this.authService.logout(req, route);
     const setCookie = result.headers['set-cookie'];
     if (setCookie) {
       res.setHeader('Set-Cookie', setCookie);
@@ -72,7 +59,7 @@ export class AuthController {
     @Res() res,
     @RouteInfoDecorator() route: RouteInfo,
   ) {
-    const result = await this.authService.forwardReq(req, route);
+    const result = await this.authService.getUsers(req, route);
 
     res.status(result.status).send(result.data);
     return result;

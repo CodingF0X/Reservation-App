@@ -9,55 +9,88 @@ import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
 import { Request } from 'express';
 import { firstValueFrom } from 'rxjs';
+import { AbstractForwardReq } from '../forwardReq.abstract';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
-export class AuthService {
-  private readonly auth: string;
-  private readonly logger = new Logger(AuthService.name);
-
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly httpService: HttpService,
-  ) {
-    this.auth =
-      this.configService.getOrThrow<Record<string, string>>('services').auth;
+export class AuthService extends AbstractForwardReq {
+  constructor(configService: ConfigService, httpService: HttpService) {
+    super(configService, httpService);
   }
 
-  async forwardReq<T = any>(
+  async register(
     req: Request,
     route: RouteInfo,
-    options: Partial<AxiosRequestConfig> = {},
+    body: RegisterDto,
   ): Promise<AxiosResponse> {
-    const { serviceName, targetPath = '' } = route;
-
-    const headersToForward = prepareHeadersForForwarding(
-      req.headers,
-      req.method,
-      //   req.body,
-      options.data,
-    );
-
-    const url = `${this.auth}/${serviceName}/${targetPath}`;
-
-    const axiosConfig: AxiosRequestConfig = {
-      method: req.method,
-      url,
-      data: req.body,
-      headers: headersToForward,
-      params: req.params,
-      ...options,
-    };
-
-    try {
-      const response: AxiosResponse<T> = await firstValueFrom(
-        this.httpService.request(axiosConfig),
-      );
-
-      return response;
-    } catch (error) {
-      return handleError(error, this.logger, this.auth);
-    }
+    return this.forwardReq(req, route, {
+      withCredentials: true,
+      validateStatus: () => true,
+      data: body,
+    });
   }
+
+  async login(
+    req: Request,
+    route: RouteInfo,
+    body: LoginDto,
+  ): Promise<AxiosResponse> {
+    return this.forwardReq(req, route, {
+      withCredentials: true,
+      validateStatus: () => true,
+      data: body,
+    });
+  }
+
+  async logout(req: Request, route: RouteInfo): Promise<AxiosResponse> {
+    return this.forwardReq(req, route, {
+      withCredentials: true,
+      validateStatus: () => true,
+    });
+  }
+
+  async getUsers(req: Request, route: RouteInfo): Promise<AxiosResponse> {
+    return this.forwardReq(req, route, {
+      withCredentials: true,
+      validateStatus: () => true,
+    });
+  }
+  // async forwardReq<T = any>(
+  //   req: Request,
+  //   route: RouteInfo,
+  //   options: Partial<AxiosRequestConfig> = {},
+  // ): Promise<AxiosResponse> {
+  //   const { serviceName, targetPath = '' } = route;
+
+  //   const headersToForward = prepareHeadersForForwarding(
+  //     req.headers,
+  //     req.method,
+  //     //   req.body,
+  //     options.data,
+  //   );
+
+  //   const url = `${this.auth}/${serviceName}/${targetPath}`;
+
+  //   const axiosConfig: AxiosRequestConfig = {
+  //     method: req.method,
+  //     url,
+  //     data: req.body,
+  //     headers: headersToForward,
+  //     params: req.params,
+  //     ...options,
+  //   };
+
+  //   try {
+  //     const response: AxiosResponse<T> = await firstValueFrom(
+  //       this.httpService.request(axiosConfig),
+  //     );
+
+  //     return response;
+  //   } catch (error) {
+  //     return handleError(error, this.logger, this.auth);
+  //   }
+  // }
 
   //   async register(req: Request) {
   //     const body: RegisterDto = req.body;
