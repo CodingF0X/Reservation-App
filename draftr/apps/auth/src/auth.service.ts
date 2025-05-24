@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './users/entity/user.entity';
@@ -32,12 +32,22 @@ export class AuthService {
       httpOnly: true,
       expires: expiresIn,
     });
+
+    return res.send({
+    event: 'logged In',
+    http_status: HttpStatus.OK
+    })
   }
 
   logout(response: Response) {
     response.cookie('Authentication', '', {
       httpOnly: true,
       expires: new Date(),
+    });
+
+    return response.status(response.statusCode).send({
+      event: 'logged out',
+      http_status: HttpStatus.ACCEPTED
     });
   }
 }
