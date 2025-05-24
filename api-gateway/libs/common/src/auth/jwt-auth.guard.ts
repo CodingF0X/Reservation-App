@@ -28,6 +28,10 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     }
 
+    if (path.includes('/login')) {
+      return true;
+    }
+
     if (!token) {
       throw new UnauthorizedException('Access Denied - Token not found ');
     }
