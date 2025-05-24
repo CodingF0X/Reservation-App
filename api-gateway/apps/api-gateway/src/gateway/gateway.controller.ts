@@ -5,7 +5,7 @@ import { GatewayService } from './gateway.service';
 export class GatewayController {
   constructor(private readonly gateWayService: GatewayService) {}
 
-   @All('*path')
+  // @All('*path')
   async proxy(@Req() req, @Res() res) {
     try {
       const result = await this.gateWayService.forwardReq(req);

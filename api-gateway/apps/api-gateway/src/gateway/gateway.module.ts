@@ -4,10 +4,14 @@ import { GatewayController } from './gateway.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, SERVICES } from '@app/common';
 import { ConfigService } from '@nestjs/config';
+import { AuthController } from './auth/auth.controller';
+import { ReservationsController } from './reservations/reservations.controller';
+import { ReservationsService } from './reservations/reservations.service';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [],
-  providers: [GatewayService],
-  controllers: [GatewayController],
+  providers: [GatewayService, ReservationsService, AuthService],
+  controllers: [GatewayController, AuthController, ReservationsController],
 })
 export class GatewayModule {}
