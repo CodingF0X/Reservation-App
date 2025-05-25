@@ -2,8 +2,9 @@ import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { LoginDto } from './dto/login.dto';
-import { RouteInfo, RouteInfoDecorator } from '@app/common';
+import { Role, RouteInfo, RouteInfoDecorator } from '@app/common';
 import { RegisterDto } from './dto/register.dto';
+import { Roles } from '@app/common/auth';
 
 @Controller('gateway')
 export class AuthController {
@@ -54,6 +55,7 @@ export class AuthController {
   }
 
   @Get('users')
+  @Roles(Role.Admin)
   async forwardReq(
     @Req() req: Request,
     @Res() res,
