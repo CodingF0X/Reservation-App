@@ -13,6 +13,7 @@ import * as path from 'path';
         path.resolve(process.cwd(), 'apps/auth/.env'),
         path.resolve(process.cwd(), 'apps/payments/.env'),
         path.resolve(process.cwd(), 'apps/notifications/.env'),
+        path.resolve(process.cwd(), 'apps/property-category/.env'),
       ],
 
       isGlobal: true,
