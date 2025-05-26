@@ -83,6 +83,18 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
           },
         }),
       },
+
+      {
+        name: SERVICE.PROPERTY_CATEGORY_SERVICE,
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get('PROPERTY_HOST'),
+            port: configService.get('PROPERITY_TCP_PORT'),
+          },
+        }),
+      }
     ]),
 
     HttpModule.register({
