@@ -1,5 +1,6 @@
 import { AbstractDocument } from '@app/common';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Address, AddressSchema } from './schema types/address.schema';
 
 @Schema({ versionKey: false })
 export class PropertyCategory extends AbstractDocument {
@@ -7,23 +8,11 @@ export class PropertyCategory extends AbstractDocument {
   name: string;
 
   @Prop({
-    type: {
-      street: String,
-      city: String,
-      state: String,
-      country: String,
-      postalCode: String,
-    },
+    type: AddressSchema,
     required: true,
     _id: false,
   })
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
-  };
+  address: Address;
 
   @Prop({ required: true })
   hostId: string;

@@ -1,14 +1,10 @@
-import { IsString } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
+import { Address } from '../entities/schema types/address.schema';
 
-export class AddressDto {
-  @IsString()
-  street: string;
-  @IsString()
-  city: string;
-  @IsString()
-  state: string;
-  @IsString()
-  country: string;
-  @IsString()
-  postalCode: string;
-}
+export class AddressDto extends PickType(Address, [
+  'street',
+  'city',
+  'state',
+  'country',
+  'postalCode',
+] as const) {}
