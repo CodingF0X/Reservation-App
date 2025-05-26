@@ -53,6 +53,10 @@ export abstract class AbstractRepository<T extends AbstractDocument> {
       .findOneAndDelete(filterQuery)
       .lean();
 
+    if (!deletedDocument) {
+      this.logger.warn('Could not find document', filterQuery);
+      throw new NotFoundException(`Document Not Found`);
+    }
     return deletedDocument as T;
   }
 }
