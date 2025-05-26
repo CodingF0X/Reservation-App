@@ -80,18 +80,14 @@ export class PropertyCategoryService {
           message: 'This property (or requested dates) is no longer available.',
         });
       }
-
+      
       return property;
     } catch (error) {
       if (error instanceof RpcException) {
         throw error;
       }
       this.logger.error(`Failed to get property with id ${id}`, error);
-      throw new RpcException({
-        code: 'PROPERTY_SERVICE_ERROR',
-        message: 'Unexpected error in PropertyCatalogService',
-        details: error.message,
-      });
+      throw new RpcException(error);
     }
   }
 
