@@ -7,6 +7,7 @@ import { PropertiesRepository } from './properties.repository';
 import { PropertyCategory } from './entities/property.entity';
 import { CreatePropertyDto } from './dto/create-prop.dto';
 import { UpdatePropertyDto } from './dto/update-prop.dto';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class PropertyCategoryService {
@@ -59,6 +60,38 @@ export class PropertyCategoryService {
         'Could not get property, please try again later.',
         error,
       );
+    }
+  }
+
+  async bookProperty(id: string): Promise<PropertyCategory> {
+    try {
+      const property = await this.propertiesRepo.findOne({ _id: id });
+
+      if (!property) {
+        throw new RpcException({
+          code: 'NOT_FOUND',
+          message: 'Property not found',
+        });
+      }
+
+      if (!property.availability[0].isAvailable) {
+        throw new RpcException({
+          code: 'PROPERTY_UNAVAILABLE',
+          message: 'This property (or requested dates) is no longer available.',
+        });
+      }
+
+      return property;
+    } catch (error) {
+      if (error instanceof RpcException) {
+        throw error;
+      }
+      this.logger.error(`Failed to get property with id ${id}`, error);
+      throw new RpcException({
+        code: 'PROPERTY_SERVICE_ERROR',
+        message: 'Unexpected error in PropertyCatalogService',
+        details: error.message,
+      });
     }
   }
 

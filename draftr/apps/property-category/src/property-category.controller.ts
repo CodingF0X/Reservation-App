@@ -3,6 +3,7 @@ import { PropertyCategoryService } from './property-category.service';
 import { CreatePropertyDto } from './dto/create-prop.dto';
 import { PropertyCategory } from './entities/property.entity';
 import { UpdatePropertyDto } from './dto/update-prop.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('properties')
 export class PropertyCategoryController {
@@ -38,5 +39,11 @@ export class PropertyCategoryController {
   @Delete(':id')
   async deleteProperty(@Param('id') id: string): Promise<string> {
     return this.propertyCategoryService.deleteProperty(id);
+  }
+
+  @MessagePattern('find_property')
+  async findProperty(@Payload() id: string): Promise<PropertyCategory> {
+    
+    return this.propertyCategoryService.bookProperty(id);
   }
 }
