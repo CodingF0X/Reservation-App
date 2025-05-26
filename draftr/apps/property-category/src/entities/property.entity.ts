@@ -15,6 +15,7 @@ export class PropertyCategory extends AbstractDocument {
       postalCode: String,
     },
     required: true,
+    _id: false,
   })
   address: {
     street: string;
@@ -39,12 +40,17 @@ export class PropertyCategory extends AbstractDocument {
   //   @Prop([String])
   //   images: string[];
 
-  @Prop([
-    {
-      start: Date,
-      end: Date,
-    },
-  ])
+  @Prop({
+    type: [
+      {
+        start: Date,
+        end: Date,
+      },
+    ],
+    required: true,
+    _id: false,
+    default: [],
+  })
   availability: {
     start: Date;
     end: Date;
@@ -57,4 +63,5 @@ export class PropertyCategory extends AbstractDocument {
   //   ratings: number[];
 }
 
-export const propertyCategoryModel = SchemaFactory.createForClass(PropertyCategory);
+export const propertyCategoryModel =
+  SchemaFactory.createForClass(PropertyCategory);

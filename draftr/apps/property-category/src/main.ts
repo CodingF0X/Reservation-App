@@ -12,7 +12,13 @@ async function bootstrap() {
   });
 
   const conifgService = app.get(ConfigService);
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
   app.useLogger(app.get(Logger));
   app.use(cookieParser());
 
