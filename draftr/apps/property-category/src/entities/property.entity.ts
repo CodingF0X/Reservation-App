@@ -32,6 +32,7 @@ export class PropertyCategory extends AbstractDocument {
   @Prop({
     type: [
       {
+        isAvailable: Boolean,
         start: Date,
         end: Date,
       },
@@ -41,6 +42,7 @@ export class PropertyCategory extends AbstractDocument {
     default: [],
   })
   availability: {
+    isAvailable: boolean;
     start: Date;
     end: Date;
   }[];
