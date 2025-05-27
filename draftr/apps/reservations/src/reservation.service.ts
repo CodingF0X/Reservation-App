@@ -109,6 +109,24 @@ export class ReservationService {
             }),
           ),
         ),
+      )
+      .pipe(
+        mergeMap((reservation) =>
+          this.propertyService
+            .send(
+              'book_property',
+              property._id,
+              //reservation,
+            )
+            .pipe(
+              map(() => reservation),
+              catchError((err: RpcException) => {
+                return throwError(
+                  () => new BadRequestException(err.message, err.name),
+                );
+              }),
+            ),
+        ),
         // emit notification
         tap((reservation) =>
           this.notificationsService.emit('reservation_notification', {

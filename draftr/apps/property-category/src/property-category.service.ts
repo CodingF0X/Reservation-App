@@ -80,7 +80,7 @@ export class PropertyCategoryService {
           message: 'This property (or requested dates) is no longer available.',
         });
       }
-      
+
       return property;
     } catch (error) {
       if (error instanceof RpcException) {
@@ -89,6 +89,29 @@ export class PropertyCategoryService {
       this.logger.error(`Failed to get property with id ${id}`, error);
       throw new RpcException(error);
     }
+  }
+
+  async reservePlace(id: string): Promise<PropertyCategory> {
+    const update = {
+      $set: { [`availability.${[0]}.isAvailable`]: false },
+    };
+
+    const property = await this.propertiesRepo.findOneAndUpdate(
+      {
+        _id: id,
+        [`availability.${[0]}.isAvailable`]: true,
+      },
+      update,
+    );
+
+    if (!property) {
+      throw new RpcException({
+        code: 'NOT_FOUND',
+        message: 'Property not found',
+      });
+    }
+
+    return property;
   }
 
   async updateProperty(

@@ -46,4 +46,10 @@ export class PropertyCategoryController {
     
     return this.propertyCategoryService.bookProperty(id);
   }
+
+  @MessagePattern('book_property')
+  async bookProperty(@Payload() id: string): Promise<PropertyCategory> {
+    console.log(id)
+    return this.propertyCategoryService.reservePlace(id);
+  }
 }
