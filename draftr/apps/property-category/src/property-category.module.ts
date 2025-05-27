@@ -9,6 +9,8 @@ import {
 } from './entities/property.entity';
 import { LoggerModule } from 'nestjs-pino';
 import { ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -25,15 +27,15 @@ import { ConfigService } from '@nestjs/config';
           transport: {
             targets: [
               // send logs to Loki
-              // // {
-              // //   target: 'pino-loki',
-              // //   options: {
-              // //     host: configService.getOrThrow<string>('LOKI_URL'),
-              // //     labels: { app: 'reservations-service', env: 'development' },
-              // //     batching: true,
-              // //     interval: 5,
-              // //   },
-              // // },
+              {
+                target: 'pino-loki',
+                options: {
+                  host: configService.getOrThrow<string>('LOKI_URL'),
+                  labels: { app: 'reservations-service', env: 'development' },
+                  batching: true,
+                  interval: 5,
+                },
+              },
               // keeping pretty-printing for local development
               {
                 target: 'pino-pretty',
@@ -43,6 +45,18 @@ import { ConfigService } from '@nestjs/config';
           },
         },
       }),
+    }),
+
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
+
+    PrometheusModule.register({
+      path: '/metrics',
+      defaultMetrics: {
+        enabled: true,
+      },
     }),
   ],
   controllers: [PropertyCategoryController],
