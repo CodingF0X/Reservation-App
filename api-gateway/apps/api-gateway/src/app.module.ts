@@ -8,11 +8,14 @@ import { ConfigModule, SERVICES } from '@app/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard, RolesGuard } from '@app/common/auth';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { PropertyService } from './gateway/property/property.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     GatewayModule,
     ConfigModule,
+    HttpModule,
     LoggerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -66,6 +69,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       provide: APP_GUARD,
       useClass: RolesGuard, // globally enforce roles when @Roles() used
     },
+    PropertyService,
   ],
 })
 export class AppModule {}

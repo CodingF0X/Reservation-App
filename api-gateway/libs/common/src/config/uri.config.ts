@@ -7,5 +7,6 @@ export default registerAs('services', (): ConfigObject => {
     auth: authServiceUri,
     users: authServiceUri,
     reservations: process.env.RESERVATIONS_SERVICE,
+    properties: process.env.PROPERTY_SERVICE
   };
 });

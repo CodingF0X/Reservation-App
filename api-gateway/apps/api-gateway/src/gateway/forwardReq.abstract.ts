@@ -10,7 +10,7 @@ import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Request } from 'express';
 import { firstValueFrom } from 'rxjs';
 
-type service = 'auth' | 'reservations' | 'users';
+type service = 'auth' | 'reservations' | 'users' | 'properties';
 
 export abstract class AbstractForwardReq {
   private readonly services: Record<service, string>;

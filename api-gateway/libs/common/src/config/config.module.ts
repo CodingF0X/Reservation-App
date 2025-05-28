@@ -9,7 +9,7 @@ import uriConfig from './uri.config';
       envFilePath: [path.resolve(process.cwd(), '.env')],
       isGlobal: true,
       ignoreEnvFile: false,
-      load:[uriConfig]
+      load: [uriConfig],
     }),
   ],
 })
