@@ -4,3 +4,4 @@ export * from './error';
 export * from './utils';
 export * from './interfaces';
 export * from './decorators';
+export * from './eureka-client';
