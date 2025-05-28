@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { PropertyCategoryModule } from './property-category.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import * as cookieParser from 'cookie-parser';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
@@ -11,6 +11,10 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
+   app.enableVersioning({
+      type: VersioningType.URI,
+    });
+  
   const conifgService = app.get(ConfigService);
   app.useGlobalPipes(
     new ValidationPipe({

@@ -1,11 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { PropertyCategoryService } from './property-category.service';
 import { CreatePropertyDto } from './dto/create-prop.dto';
 import { PropertyCategory } from './entities/property.entity';
 import { UpdatePropertyDto } from './dto/update-prop.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
-@Controller('properties')
+@Controller({ path: 'properties', version: '1' })
 export class PropertyCategoryController {
   constructor(
     private readonly propertyCategoryService: PropertyCategoryService,
@@ -43,13 +51,12 @@ export class PropertyCategoryController {
 
   @MessagePattern('find_property')
   async findProperty(@Payload() id: string): Promise<PropertyCategory> {
-    
     return this.propertyCategoryService.bookProperty(id);
   }
 
   @MessagePattern('book_property')
   async bookProperty(@Payload() id: string): Promise<PropertyCategory> {
-    console.log(id)
+    console.log(id);
     return this.propertyCategoryService.reservePlace(id);
   }
 }
