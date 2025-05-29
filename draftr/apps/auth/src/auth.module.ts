@@ -74,7 +74,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
       useFactory: (configService: ConfigService) => ({
         instance: {
           app: configService.getOrThrow<string>('AUTH_SERVICE'),
-          hostName: configService.getOrThrow<string>('AUTH_SERVICE_PORT'),
+          hostName: configService.getOrThrow<string>('AUTH_SERVICE_HOST'),
           instanceId: configService.getOrThrow<string>('AUTH_SERVICE'),
           ipAddr: configService.getOrThrow<string>('AUTH_SERVICE_ipAddr'),
           port: {
