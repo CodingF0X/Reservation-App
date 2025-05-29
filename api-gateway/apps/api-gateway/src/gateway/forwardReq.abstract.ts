@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Request } from 'express';
 import { firstValueFrom } from 'rxjs';
+import { DiscoverServices } from './services/Service-discovery.eureka';
 
 type service = 'auth' | 'reservations' | 'users' | 'properties';
 
@@ -19,6 +20,7 @@ export abstract class AbstractForwardReq {
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
+    private readonly discoverService: DiscoverServices,
   ) {
     this.services =
       configService.getOrThrow<Record<service, string>>('services');
@@ -31,7 +33,16 @@ export abstract class AbstractForwardReq {
   ): Promise<AxiosResponse<T>> {
     const { serviceName, targetPath = '' } = route;
 
-    const baseUrl = this.services[serviceName];
+    const instanceId = this.mapPathToService(serviceName);
+    const instances = this.discoverService.getInstances(instanceId);
+
+    if (!instances.length) {
+      throw new Error(`No instances available for ${serviceName}`);
+    }
+
+    const target = instances[Math.floor(Math.random() * instances.length)];
+    
+    const baseUrl = `http://${target.hostName}:${target.port}/${target.metadata.version}`;
 
     if (!baseUrl) {
       throw new Error(
@@ -66,5 +77,16 @@ export abstract class AbstractForwardReq {
     } catch (error) {
       return handleError(error, this.logger, baseUrl);
     }
+  }
+
+  private mapPathToService(path: string): string {
+    // e.g. inspect req.baseUrl or a custom header
+    // or you could maintain a static map:
+
+    if (path === 'auth') return 'AUTH_SERVICE';
+    if (path === 'reservations') return 'RESERVATIONS_SERVICE';
+    if (path === 'property') return 'PROPERTY_SERVICE';
+
+    return 'UNKNOWN PATH';
   }
 }
