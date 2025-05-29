@@ -7,11 +7,12 @@ import { RouteInfo } from '@app/common';
 import { AxiosResponse } from 'axios';
 import { CreatePropertyDto } from './dto/create-prop.dto';
 import { UpdatePropertyDto } from './dto/update-prop.dto';
+import { DiscoverServices } from '../services/Service-discovery.eureka';
 
 @Injectable()
 export class PropertyService extends AbstractForwardReq {
-  constructor(configService: ConfigService, httpService: HttpService) {
-    super(configService, httpService);
+  constructor(configService: ConfigService, httpService: HttpService, discoverServices: DiscoverServices) {
+    super(configService, httpService, discoverServices);
   }
 
   async getAllProperties(

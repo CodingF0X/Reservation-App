@@ -7,11 +7,16 @@ import { RouteInfo } from '@app/common';
 import { AxiosResponse } from 'axios';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { DiscoverServices } from '../services/Service-discovery.eureka';
 
 @Injectable()
 export class ReservationsService extends AbstractForwardReq {
-  constructor(configService: ConfigService, httpService: HttpService) {
-    super(configService, httpService);
+  constructor(
+    configService: ConfigService,
+    httpService: HttpService,
+    discoverServices: DiscoverServices,
+  ) {
+    super(configService, httpService, discoverServices);
   }
 
   async getAllReservations(

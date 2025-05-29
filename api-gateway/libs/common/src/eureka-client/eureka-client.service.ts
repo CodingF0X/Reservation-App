@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Eureka } from 'eureka-js-client';
 import { EurekaClientOptions } from './eureka-client.interface';
+import { InstanceInfo } from './instance.interface';
 
 @Injectable()
 export class EurekaClientService {
@@ -26,6 +27,8 @@ export class EurekaClientService {
   // }
 
   private startClient() {
+        console.log(this.client.getInstancesByVipAddress('auth'));
+
     this.client.start((error) => {
       this.logger.log('Attempting to register with Eureka Server...');
 
@@ -54,7 +57,15 @@ export class EurekaClientService {
     });
   }
 
-  getClient(): Eureka {
-    return this.client;
+  getInstancesByVipAddress(vipAddress: string): InstanceInfo[] {
+    return this.client.getInstancesByVipAddress(
+      vipAddress,
+    ) as InstanceInfo[];
+  }
+
+  getInstancesByAppId(appId: string): InstanceInfo[] {
+    return this.client.getInstancesByAppId(
+      appId.toUpperCase(),
+    ) as InstanceInfo[];
   }
 }

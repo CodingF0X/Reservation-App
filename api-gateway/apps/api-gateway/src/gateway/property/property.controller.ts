@@ -4,10 +4,13 @@ import { RouteInfo, RouteInfoDecorator } from '@app/common';
 import { Request, Response } from 'express';
 import { CreatePropertyDto } from './dto/create-prop.dto';
 import { UpdatePropertyDto } from './dto/update-prop.dto';
+import { DiscoverServices } from '../services/Service-discovery.eureka';
 
 @Controller('gateway')
 export class PropertyController {
-  constructor(private readonly propertyService: PropertyService) {}
+  constructor(private readonly propertyService: PropertyService,
+    private readonly serviceDiscover: DiscoverServices
+  ) {}
 
   @Get('properties')
   async getProperties(
@@ -66,6 +69,12 @@ export class PropertyController {
   ) {
     const result = await this.propertyService.deleteProperty(req, route);
     res.status(result.status).send(result.data);
+    return result;
+  }
+
+  @Get()
+  async getServices() {
+    const result = await this.serviceDiscover.getServices("RESERVATIONS_SERVICE");
     return result;
   }
 }

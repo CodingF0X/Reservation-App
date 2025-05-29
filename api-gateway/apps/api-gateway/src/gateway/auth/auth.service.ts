@@ -12,11 +12,16 @@ import { firstValueFrom } from 'rxjs';
 import { AbstractForwardReq } from '../forwardReq.abstract';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { DiscoverServices } from '../services/Service-discovery.eureka';
 
 @Injectable()
 export class AuthService extends AbstractForwardReq {
-  constructor(configService: ConfigService, httpService: HttpService) {
-    super(configService, httpService);
+  constructor(
+    configService: ConfigService,
+    httpService: HttpService,
+    discoverServices: DiscoverServices,
+  ) {
+    super(configService, httpService, discoverServices);
   }
 
   async register(

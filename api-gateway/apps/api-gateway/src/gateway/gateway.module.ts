@@ -8,6 +8,7 @@ import { PropertyService } from './property/property.service';
 import { HttpModule } from '@nestjs/axios';
 import { EurekaClientModule } from '@app/common';
 import { ConfigService } from '@nestjs/config';
+import { DiscoverServices } from './services/Service-discovery.eureka';
 
 @Module({
   imports: [HttpModule,
@@ -49,7 +50,7 @@ import { ConfigService } from '@nestjs/config';
       }),
     }),
   ],
-  providers: [ReservationsService, AuthService, PropertyService],
+  providers: [ReservationsService, AuthService, PropertyService, DiscoverServices],
   controllers: [AuthController, ReservationsController, PropertyController],
 })
 export class GatewayModule {}
