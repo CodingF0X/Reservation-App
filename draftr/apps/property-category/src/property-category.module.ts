@@ -59,43 +59,40 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
       },
     }),
 
-     EurekaClientModule.forRootAsync({
-          inject: [ConfigService],
-          useFactory: (configService: ConfigService) => ({
-            instance: {
-              app: configService.getOrThrow<string>('PROPERTY_SERVICE'),
-              hostName: configService.getOrThrow<string>(
-                'PROPERTY_HOST',
-              ),
-              instanceId: configService.getOrThrow<string>('PROPERTY_SERVICE'),
-              ipAddr: configService.getOrThrow<string>(
-                'PROPERTY_SERVICE_ipAddr',
-              ),
-              port: {
-                $: Number(
-                  configService.getOrThrow<number>('PROPERTY_HTTP_PORT'),
-                ),
-                '@enabled': true,
-              },
-              vipAddress: configService.getOrThrow<string>('PROPERTY_SERVICE'),
-              dataCenterInfo: {
-                '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
-                name: 'MyOwn',
-              },
-            },
-            eureka: {
-              host: configService.getOrThrow<string>('EUREKA_SERVER_HOST'),
-              port: configService.getOrThrow<number>('EUREKA_SERVER_PORT'),
-              fetchRegistry: true,
-              registryFetchInterval: 10000,
-              maxRetries: 5,
-              requestRetryDelay: 10000,
-              heartbeatInterval: 1000,
-              servicePath: '/eureka/apps/',
-            },
-            shouldUseDelta: true,
-          }),
-        }),
+    EurekaClientModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        instance: {
+          app: configService.getOrThrow<string>('PROPERTY_SERVICE'),
+          hostName: configService.getOrThrow<string>('PROPERTY_HOST'),
+          instanceId: configService.getOrThrow<string>('PROPERTY_SERVICE'),
+          ipAddr: configService.getOrThrow<string>('PROPERTY_SERVICE_ipAddr'),
+          port: {
+            $: Number(configService.getOrThrow<number>('PROPERTY_HTTP_PORT')),
+            '@enabled': true,
+          },
+          vipAddress: configService.getOrThrow<string>('PROPERTY_SERVICE'),
+          dataCenterInfo: {
+            '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
+            name: 'MyOwn',
+          },
+          metadata: {
+            version: configService.getOrThrow<string>('PROPERTY_API_VERSION'),
+          },
+        },
+        eureka: {
+          host: configService.getOrThrow<string>('EUREKA_SERVER_HOST'),
+          port: configService.getOrThrow<number>('EUREKA_SERVER_PORT'),
+          fetchRegistry: true,
+          registryFetchInterval: 10000,
+          maxRetries: 5,
+          requestRetryDelay: 10000,
+          heartbeatInterval: 1000,
+          servicePath: '/eureka/apps/',
+        },
+        shouldUseDelta: true,
+      }),
+    }),
   ],
   controllers: [PropertyCategoryController],
   providers: [PropertyCategoryService, PropertiesRepository],

@@ -94,7 +94,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
             port: configService.get('PROPERITY_TCP_PORT'),
           },
         }),
-      }
+      },
     ]),
 
     HttpModule.register({
@@ -131,6 +131,11 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
           dataCenterInfo: {
             '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
             name: 'MyOwn',
+          },
+          metadata: {
+            version: configService.getOrThrow<string>(
+              'RESERVATION_API_VERSION',
+            ),
           },
         },
         eureka: {

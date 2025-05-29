@@ -11,7 +11,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 @Module({
   imports: [
     ConfigModule,
-     LoggerModule.forRootAsync({
+    LoggerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         pinoHttp: {
@@ -82,6 +82,9 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
           dataCenterInfo: {
             '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
             name: 'MyOwn',
+          },
+          metadata: {
+            version: configService.getOrThrow<string>('PAYMENTS_API_VERSION'),
           },
         },
         eureka: {

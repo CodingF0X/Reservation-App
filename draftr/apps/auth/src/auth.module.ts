@@ -74,17 +74,20 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
       useFactory: (configService: ConfigService) => ({
         instance: {
           app: configService.getOrThrow<string>('AUTH_SERVICE'),
-          hostName: configService.getOrThrow<string>('AUTH_SERVICE_HOST'),
+          hostName: configService.getOrThrow<string>('AUTH_SERVICE_HOST') || 'localhost',
           instanceId: configService.getOrThrow<string>('AUTH_SERVICE'),
-          ipAddr: configService.getOrThrow<string>('AUTH_SERVICE_ipAddr'),
+          ipAddr: configService.getOrThrow<string>('AUTH_SERVICE_ipAddr'), 
           port: {
             $: Number(configService.getOrThrow<number>('AUTH_SERVICE_PORT')),
             '@enabled': true,
           },
-          vipAddress: configService.getOrThrow<string>('AUTH_SERVICE'),
+          vipAddress: 'auth',
           dataCenterInfo: {
             '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
             name: 'MyOwn',
+          },
+          metadata: {
+            version: configService.getOrThrow<string>('AUTH_API_VERSION'),
           },
         },
         eureka: {
