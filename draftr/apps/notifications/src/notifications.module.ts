@@ -69,7 +69,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
         instance: {
           app: configService.getOrThrow<string>('NOTIFICATIONS_SERVICE'),
           hostName: configService.getOrThrow<string>(
-            'NOTIFICATIONS_SERVICE_HOST',
+            'NOTIFICATIONS_HOST',
           ),
           instanceId: configService.getOrThrow<string>('NOTIFICATIONS_SERVICE'),
           ipAddr: configService.getOrThrow<string>(
@@ -77,7 +77,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
           ),
           port: {
             $: Number(
-              configService.getOrThrow<number>('NOTIFICATIONS_SERVICE_PORT'),
+              configService.getOrThrow<number>('NOTIFICATIONS_HTTP_PORT'),
             ),
             '@enabled': true,
           },

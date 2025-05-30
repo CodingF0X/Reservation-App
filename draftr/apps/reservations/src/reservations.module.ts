@@ -115,7 +115,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
         instance: {
           app: configService.getOrThrow<string>('RESERVATIONS_SERVICE'),
           hostName: configService.getOrThrow<string>(
-            'RESERVATIONS_SERVICE_HOST',
+            'RESERVATION_HOST',
           ),
           instanceId: configService.getOrThrow<string>('RESERVATIONS_SERVICE'),
           ipAddr: configService.getOrThrow<string>(
@@ -123,7 +123,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
           ),
           port: {
             $: Number(
-              configService.getOrThrow<number>('RESERVATIONS_SERVICE_PORT'),
+              configService.getOrThrow<number>('RESERVATION_HTTP_PORT'),
             ),
             '@enabled': true,
           },

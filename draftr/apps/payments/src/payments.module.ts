@@ -69,12 +69,12 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
       useFactory: (configService: ConfigService) => ({
         instance: {
           app: configService.getOrThrow<string>('PAYMENTS_SERVICE'),
-          hostName: configService.getOrThrow<string>('PAYMENTS_SERVICE_HOST'),
+          hostName: configService.getOrThrow<string>('PAYMENTS_HOST'),
           instanceId: configService.getOrThrow<string>('PAYMENTS_SERVICE'),
           ipAddr: configService.getOrThrow<string>('PAYMENTS_SERVICE_ipAddr'),
           port: {
             $: Number(
-              configService.getOrThrow<number>('PAYMENTS_SERVICE_PORT'),
+              configService.getOrThrow<number>('PAYMENTS_HTTP_PORT'),
             ),
             '@enabled': true,
           },

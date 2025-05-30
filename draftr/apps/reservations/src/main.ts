@@ -20,14 +20,14 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
-      port: 8002,
-      host: 'localhost',
+      port: configService.getOrThrow<number>('RESERVATION_HTTP_PORT'),
+      host: configService.getOrThrow<string>('RESERVATION_HOST'),
     },
   });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useLogger(app.get(Logger));
   app.use(cookieParser());
-  await app.startAllMicroservices()
+  await app.startAllMicroservices();
   await app.listen(configService.getOrThrow('RESERVATION_HTTP_PORT'));
 }
 bootstrap();
