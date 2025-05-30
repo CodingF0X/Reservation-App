@@ -18,13 +18,9 @@ export abstract class AbstractForwardReq {
   private readonly logger = new Logger(AbstractForwardReq.name);
 
   constructor(
-    private readonly configService: ConfigService,
     private readonly httpService: HttpService,
     private readonly discoverService: DiscoverServices,
-  ) {
-    this.services =
-      configService.getOrThrow<Record<service, string>>('services');
-  }
+  ) {}
 
   protected async forwardReq<T = any>(
     req: Request,
@@ -41,7 +37,7 @@ export abstract class AbstractForwardReq {
     }
 
     const target = instances[Math.floor(Math.random() * instances.length)];
-    
+
     const baseUrl = `http://${target.hostName}:${target.port}/${target.metadata.version}`;
 
     if (!baseUrl) {
@@ -80,12 +76,10 @@ export abstract class AbstractForwardReq {
   }
 
   private mapPathToService(path: string): string {
-    // e.g. inspect req.baseUrl or a custom header
-    // or you could maintain a static map:
-
     if (path === 'auth') return 'AUTH_SERVICE';
+    if (path === 'users') return 'AUTH_SERVICE';
     if (path === 'reservations') return 'RESERVATIONS_SERVICE';
-    if (path === 'property') return 'PROPERTY_SERVICE';
+    if (path === 'properties') return 'PROPERTY_SERVICE';
 
     return 'UNKNOWN PATH';
   }

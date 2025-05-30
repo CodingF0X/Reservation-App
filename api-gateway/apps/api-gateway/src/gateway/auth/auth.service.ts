@@ -1,14 +1,10 @@
 import {
-  handleError,
-  prepareHeadersForForwarding,
   RouteInfo,
 } from '@app/common';
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { Injectable } from '@nestjs/common';
+import { AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
 import { Request } from 'express';
-import { firstValueFrom } from 'rxjs';
 import { AbstractForwardReq } from '../forwardReq.abstract';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -16,12 +12,8 @@ import { DiscoverServices } from '../services/Service-discovery.eureka';
 
 @Injectable()
 export class AuthService extends AbstractForwardReq {
-  constructor(
-    configService: ConfigService,
-    httpService: HttpService,
-    discoverServices: DiscoverServices,
-  ) {
-    super(configService, httpService, discoverServices);
+  constructor(httpService: HttpService, discoverServices: DiscoverServices) {
+    super(httpService, discoverServices);
   }
 
   async register(

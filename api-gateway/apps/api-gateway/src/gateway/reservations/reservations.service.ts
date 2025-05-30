@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { AbstractForwardReq } from '../forwardReq.abstract';
-import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { Request } from 'express';
 import { RouteInfo } from '@app/common';
@@ -11,12 +10,8 @@ import { DiscoverServices } from '../services/Service-discovery.eureka';
 
 @Injectable()
 export class ReservationsService extends AbstractForwardReq {
-  constructor(
-    configService: ConfigService,
-    httpService: HttpService,
-    discoverServices: DiscoverServices,
-  ) {
-    super(configService, httpService, discoverServices);
+  constructor(httpService: HttpService, discoverServices: DiscoverServices) {
+    super(httpService, discoverServices);
   }
 
   async getAllReservations(

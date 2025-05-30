@@ -1,6 +1,5 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { AbstractForwardReq } from '../forwardReq.abstract';
 import { Request } from 'express';
 import { RouteInfo } from '@app/common';
@@ -11,8 +10,8 @@ import { DiscoverServices } from '../services/Service-discovery.eureka';
 
 @Injectable()
 export class PropertyService extends AbstractForwardReq {
-  constructor(configService: ConfigService, httpService: HttpService, discoverServices: DiscoverServices) {
-    super(configService, httpService, discoverServices);
+  constructor(httpService: HttpService, discoverServices: DiscoverServices) {
+    super(httpService, discoverServices);
   }
 
   async getAllProperties(
@@ -56,10 +55,7 @@ export class PropertyService extends AbstractForwardReq {
     });
   }
 
-  async deleteProperty(
-    req: Request,
-    route: RouteInfo,
-  ): Promise<AxiosResponse> {
+  async deleteProperty(req: Request, route: RouteInfo): Promise<AxiosResponse> {
     return this.forwardReq(req, route, {
       withCredentials: true,
       validateStatus: () => true,

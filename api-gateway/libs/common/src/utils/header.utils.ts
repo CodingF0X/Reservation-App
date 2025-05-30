@@ -1,5 +1,4 @@
 import { IncomingHttpHeaders } from 'http'; 
-import { Request } from 'express'; 
 
 export function prepareHeadersForForwarding(
   originalHeaders: IncomingHttpHeaders,
@@ -8,10 +7,8 @@ export function prepareHeadersForForwarding(
 ): Record<string, string> {
   const headersToForward: Record<string, string> = {};
 
-  // Iterate over original headers and copy them
   for (const key in originalHeaders) {
     if (Object.prototype.hasOwnProperty.call(originalHeaders, key)) {
-      // Ensure header values are strings, as Axios headers object expects string values
       const value = originalHeaders[key];
       if (typeof value === 'string') {
         headersToForward[key] = value;
@@ -24,11 +21,10 @@ export function prepareHeadersForForwarding(
   }
 
   // --- Filter out problematic headers ---
-  // These headers are typically managed by Axios or are specific to the client-gateway connection.
-  delete headersToForward['host'];           // Axios sets this based on the target URL
-  delete headersToForward['connection'];     // Often 'keep-alive', can cause issues with proxying
-  delete headersToForward['content-length']; // Axios calculates this for the outgoing request
-  delete headersToForward['accept-encoding']; // Prevents double-compression issues if gateway also compresses
+  delete headersToForward['host'];          
+  delete headersToForward['connection'];     
+  delete headersToForward['content-length']; 
+  delete headersToForward['accept-encoding']; 
 
   // --- Special handling for Content-Type ---
   // content-type is correctly set for POST/PUT/PATCH requests if a body exists
