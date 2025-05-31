@@ -1,0 +1,129 @@
+version: "3.8"
+
+services:
+  #Eureka Server
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+
+  #API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+      target: development
+    command: npm run start:dev
+    env_file:
+      - ./api-gateway/.env
+    ports:
+      - "3095:3095"
+    depends_on:
+      - eureka-server
+
+  # DRAFTR MICROSERVICES
+  reservations_service:
+    build:
+      context: ./draftr
+      dockerfile: ./apps/reservations/Dockerfile
+      target: development
+    command: npm run start:dev reservations
+    env_file:
+      - ./draftr/.env
+      - ./draftr/apps/reservations/.env
+    ports:
+      - "3002:3002"
+    depends_on:
+      - eureka-server
+
+  property_service:
+    build:
+      context: ./draftr
+      dockerfile: ./apps/property-category/Dockerfile
+      target: development
+    command: npm run start:dev property-category
+    env_file:
+      - ./draftr/.env
+      - ./draftr/apps/property-category/.env
+    ports:
+      - "3006:3006"
+    depends_on:
+      - eureka-server
+
+  payments:
+    build:
+      context: ./draftr
+      dockerfile: ./apps/payments/Dockerfile
+      target: development
+    command: npm run start:dev payments
+    env_file:
+      - ./draftr/.env
+      - ./draftr/apps/payments/.env
+    ports:
+      - "3003:3003"
+    depends_on:
+      - eureka-server
+
+  notifications:
+    build:
+      context: ./draftr
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: npm run start:dev notifications
+    env_file:
+      - ./draftr/apps/notifications/.env
+    ports:
+      - "3004:3004"
+    depends_on:
+      - eureka-server
+
+  auth_service:
+    build:
+      context: ./draftr
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: npm run start:dev auth
+    env_file:
+      - ./draftr/apps/auth/.env
+    ports:
+      - "3001:3001"
+    depends_on:
+      - eureka-server
+
+  # DATABASE & MONITORING
+  mongo:
+    image: mongo
+
+  loki:
+    image: grafana/loki:2.8.2
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - reservations_service
+      - payments
+      - notifications
+      - property_service
+      - auth_service
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-piechart-panel
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - loki
+      - prometheus
