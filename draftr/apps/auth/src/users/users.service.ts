@@ -7,6 +7,7 @@ import { UsersRepository } from './user.repository';
 import { User } from './entity/user.entity';
 import { CreateUserInput } from './dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
+import { UpdateUserInput } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -33,8 +34,24 @@ export class UsersService {
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<User[]> {
     return await this.userRepository.find({});
+  }
+
+  async findOne(_id: string): Promise<User> {
+    try {
+      return await this.userRepository.findOne({ _id });
+    } catch (error) {
+      throw new UnprocessableEntityException('User not found', error);
+    }
+  }
+
+  async updateUser(id: string, body: UpdateUserInput): Promise<User> {
+    try {
+      return await this.userRepository.findOneAndUpdate({ _id: id }, body);
+    } catch (error) {
+      throw new UnprocessableEntityException('User not found', error);
+    }
   }
 
   async verifyUser(email: string, password: string): Promise<User> {

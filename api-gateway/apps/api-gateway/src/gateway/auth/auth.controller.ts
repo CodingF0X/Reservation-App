@@ -109,7 +109,6 @@ export class AuthController {
 
   @Patch('users/:id')
   @SwaggerUpdateUser(User)
-  @Roles(Role.User)
   async forwardReqPatchUserById(
     @Req() req: Request,
     @Res() res,
