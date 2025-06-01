@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { AbstractForwardReq } from '../forwardReq.abstract';
 import { HttpService } from '@nestjs/axios';
 import { Request } from 'express';
-import { RouteInfo } from '@app/common';
-import { AxiosResponse } from 'axios';
+import { CustomRequest, RouteInfo } from '@app/common';
+import { AxiosHeaderValue, AxiosResponse } from 'axios';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { DiscoverServices } from '../services/Service-discovery.eureka';
@@ -26,7 +26,7 @@ export class ReservationsService extends AbstractForwardReq {
   }
 
   async createReservation(
-    req: Request,
+    req: CustomRequest,
     route: RouteInfo,
     body: CreateReservationDto,
   ): Promise<AxiosResponse> {
@@ -34,6 +34,7 @@ export class ReservationsService extends AbstractForwardReq {
       withCredentials: true,
       validateStatus: () => true,
       data: body,
+      headers: req.user,
     });
   }
 

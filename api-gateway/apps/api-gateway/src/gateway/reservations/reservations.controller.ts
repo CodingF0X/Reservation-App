@@ -11,9 +11,15 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ReservationsService } from './reservations.service';
-import { RouteInfo, RouteInfoDecorator } from '@app/common';
+import {
+  CurrentUser,
+  CustomRequest,
+  RouteInfo,
+  RouteInfoDecorator,
+} from '@app/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { UserDto } from './dto/user.dto';
 
 @Controller('gateway')
 export class ReservationsController {
@@ -34,9 +40,10 @@ export class ReservationsController {
 
   @Post('reservations')
   async createReservation(
-    @Req() req: Request,
+    @Req() req: CustomRequest,
     @Res() res: Response,
     @RouteInfoDecorator() route: RouteInfo,
+    @CurrentUser() user: UserDto,
     @Body() body: CreateReservationDto,
   ) {
     const result = await this.reservationsService.createReservation(
@@ -44,7 +51,7 @@ export class ReservationsController {
       route,
       body,
     );
-    res.status(result.status).send(result.data);
+    res.status(result.status).send({ body: result.data });
     return result;
   }
 
