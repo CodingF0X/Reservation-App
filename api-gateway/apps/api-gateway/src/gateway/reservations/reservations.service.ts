@@ -25,6 +25,16 @@ export class ReservationsService extends AbstractForwardReq {
     });
   }
 
+  async getReservationById(
+    req: Request,
+    route: RouteInfo,
+  ): Promise<AxiosResponse> {
+    return this.forwardReq(req, route, {
+      withCredentials: true,
+      validateStatus: () => true,
+    });
+  }
+
   async createReservation(
     req: CustomRequest,
     route: RouteInfo,

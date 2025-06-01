@@ -20,11 +20,21 @@ import {
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { UserDto } from './dto/user.dto';
+import {
+  SwaggerCreateReservation,
+  SwaggerDeleteReservation,
+  SwaggerGetAllReservations,
+  SwaggerGetReservationById,
+  SwaggerUpdateReservation,
+} from '@app/common/swagger';
+import { ReservationModel } from './dto/reservation.model';
 
 @Controller('gateway')
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
+
   @Get('reservations')
+  @SwaggerGetAllReservations(ReservationModel)
   async getReservations(
     @Req() req: Request,
     @Res() res: Response,
@@ -38,7 +48,24 @@ export class ReservationsController {
     return result;
   }
 
+  @Get('reservations/:id')
+  @SwaggerGetReservationById(ReservationModel)
+  async getReservation(
+    @Req() req: Request,
+    @Res() res: Response,
+    @RouteInfoDecorator() route: RouteInfo,
+    @Param('id') id: string,
+  ) {
+    const result = await this.reservationsService.getReservationById(
+      req,
+      route,
+    );
+    res.status(result.status).send(result.data);
+    return result;
+  }
+
   @Post('reservations')
+  @SwaggerCreateReservation(ReservationModel)
   async createReservation(
     @Req() req: CustomRequest,
     @Res() res: Response,
@@ -56,6 +83,7 @@ export class ReservationsController {
   }
 
   @Patch('reservations/:id')
+  @SwaggerUpdateReservation(ReservationModel)
   async updateReservation(
     @Req() req: Request,
     @Res() res: Response,
@@ -73,6 +101,7 @@ export class ReservationsController {
   }
 
   @Delete('reservations/:id')
+  @SwaggerDeleteReservation(ReservationModel)
   async deleteReservation(
     @Req() req: Request,
     @Res() res: Response,
