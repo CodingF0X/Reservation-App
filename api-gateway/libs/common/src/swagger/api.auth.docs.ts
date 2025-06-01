@@ -1,4 +1,3 @@
-// src/common/decorators/api-standard-responses.decorator.ts
 import { applyDecorators, Type } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
