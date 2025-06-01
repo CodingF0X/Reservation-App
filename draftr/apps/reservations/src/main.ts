@@ -20,7 +20,7 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
-      port: configService.getOrThrow<number>('RESERVATION_HTTP_PORT'),
+      port: configService.getOrThrow<number>('RESERVATION_TCP_PORT'),
       host: configService.getOrThrow<string>('RESERVATION_HOST'),
     },
   });
