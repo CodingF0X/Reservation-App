@@ -9,6 +9,7 @@ import { AbstractForwardReq } from '../forwardReq.abstract';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { DiscoverServices } from '../services/Service-discovery.eureka';
+import { UpdateUserDto } from './dto/update.dto';
 
 @Injectable()
 export class AuthService extends AbstractForwardReq {
@@ -53,6 +54,29 @@ export class AuthService extends AbstractForwardReq {
       validateStatus: () => true,
     });
   }
+
+  async getUserById(req: Request, route: RouteInfo): Promise<AxiosResponse> {
+    return this.forwardReq(req, route, {
+      withCredentials: true,
+      validateStatus: () => true,
+    });
+  }
+
+  async updateUser(req:Request, route:RouteInfo, body: UpdateUserDto):Promise<AxiosResponse>{
+    return this.forwardReq(req, route, {
+      withCredentials: true,
+      validateStatus: () => true,
+      data: body
+    });
+  }
+
+  async deleteUser(req: Request, route: RouteInfo): Promise<AxiosResponse> {
+    return this.forwardReq(req, route, {
+      withCredentials: true,
+      validateStatus: () => true,
+    });
+  }
+
   // async forwardReq<T = any>(
   //   req: Request,
   //   route: RouteInfo,
