@@ -7,28 +7,28 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
-import { JwtAuthGuard, Role, Roles, RolesGuard } from '@app/common';
-import { CurrentUser } from 'apps/auth/src/current-user.decorator';
 import { UserDto } from './dto/user.dto';
+import { CurrentUser } from './current-user.decorator';
+import { Request } from 'express';
 
 @Controller({ path: 'reservations', version: '1' })
 export class ReservationsController {
   constructor(private readonly reservationService: ReservationService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.User, Role.Admin)
-  create(@Body() createReservationDto: CreateReservationDto, @CurrentUser() user: UserDto) {
-    return this.reservationService.create(createReservationDto, user);
+  create(
+    @Body() createReservationBody: CreateReservationDto,
+    @CurrentUser() user: UserDto,
+  ) {
+    return this.reservationService.create(createReservationBody, user);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.User)
   findAll() {
     return this.reservationService.findAll();
   }
