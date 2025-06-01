@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import * as cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
+import { setupSwagger } from './swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -24,6 +25,8 @@ async function bootstrap() {
       host: configService.getOrThrow('GATEWAY_HOST'),
     },
   });
+
+  setupSwagger(app);
 
   app.useGlobalPipes(
     new ValidationPipe({
