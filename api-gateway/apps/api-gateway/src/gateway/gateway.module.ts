@@ -9,6 +9,7 @@ import { HttpModule } from '@nestjs/axios';
 import { EurekaClientModule } from '@app/common';
 import { ConfigService } from '@nestjs/config';
 import { DiscoverServices } from './services/Service-discovery.eureka';
+import { CircuitBreakerService } from './circuit-breaker.service';
 
 @Module({
   imports: [HttpModule,
@@ -50,7 +51,7 @@ import { DiscoverServices } from './services/Service-discovery.eureka';
       }),
     }),
   ],
-  providers: [ReservationsService, AuthService, PropertyService, DiscoverServices],
+  providers: [ReservationsService, AuthService, PropertyService, DiscoverServices, CircuitBreakerService],
   controllers: [AuthController, ReservationsController, PropertyController],
 })
 export class GatewayModule {}

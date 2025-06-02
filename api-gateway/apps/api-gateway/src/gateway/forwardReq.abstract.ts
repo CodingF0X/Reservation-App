@@ -4,18 +4,19 @@ import {
   RouteInfo,
 } from '@app/common';
 import { HttpService } from '@nestjs/axios';
-import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Logger} from '@nestjs/common';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Request } from 'express';
-import { firstValueFrom } from 'rxjs';
 import { DiscoverServices } from './services/Service-discovery.eureka';
+import { CircuitBreakerService } from './circuit-breaker.service';
 
 type service = 'auth' | 'reservations' | 'users' | 'properties';
 
 export abstract class AbstractForwardReq {
   private readonly services: Record<service, string>;
   private readonly logger = new Logger(AbstractForwardReq.name);
+  @Inject(CircuitBreakerService)
+  private readonly cbService: CircuitBreakerService;
 
   constructor(
     private readonly httpService: HttpService,
@@ -66,10 +67,13 @@ export abstract class AbstractForwardReq {
     };
 
     try {
-      const response: AxiosResponse<T> = await firstValueFrom(
-        this.httpService.request<T>(axiosConfig),
-      );
-      return response;
+      // const response: AxiosResponse<T> = await firstValueFrom(
+      //   this.httpService.request<T>(axiosConfig),
+      // );
+
+      //return response;
+
+      return await this.cbService.fireRequest(axiosConfig);
     } catch (error) {
       return handleError(error, this.logger, baseUrl);
     }
