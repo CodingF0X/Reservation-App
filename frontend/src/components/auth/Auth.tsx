@@ -2,6 +2,7 @@ import { Button, Stack, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetMe } from "../../hooks/useGetMe";
+import Routes from "../Routes";
 
 interface AuthProps {
   submitLable: string;
@@ -22,7 +23,7 @@ const Auth = ({ submitLable, onSubmit, children, error }: AuthProps) => {
 
   // here to navigate to home page after successful login
   useEffect(() => {
-    if (data) navigate("/");
+    if (data) Routes.navigate("/");
   }, [data, navigate]);
 
   const emailError = () => {
@@ -40,21 +41,21 @@ const Auth = ({ submitLable, onSubmit, children, error }: AuthProps) => {
       spacing={3}
       sx={{
         width: "100%",
-        // maxWidth: {
-        //   xs: "90%",
-        //   sm: "70%",
-        //   md: "50%",
-        //   lg: "40%",
-        //   xl: "30%",
-        // },
+        maxWidth: {
+          xs: "90%",
+          sm: "70%",
+          md: "50%",
+          lg: "40%",
+          xl: "30%",
+        },
         margin: "0 auto",
-        // padding: {
-        //   xs: 2,
-        //   sm: 3,
-        //   md: 4,
-        //   lg: 5,
-        //   xl: 6,
-        // },
+        padding: {
+          xs: 2,
+          sm: 3,
+          md: 4,
+          lg: 5,
+          xl: 6,
+        },
         borderRadius: 1,
       }}
     >

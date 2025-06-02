@@ -10,10 +10,15 @@ import routes from "./components/Routes";
 import Guard from "./components/auth/Guard";
 //import Header from "./components/header/Header";
 import usePath from "./hooks/usePaths";
+import Header from "./components/header/Header";
 
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
+    // mode: "light",
+    // background: {
+    //   default: "#F4F1E0",
+    // }
   },
 });
 function App() {
@@ -26,7 +31,7 @@ function App() {
   return (
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        {/* <Header /> */}
+        <Header />
         <Guard>
           <Container sx={{ height: "80vh", maxWidth: "xl", mt:'30px' }}>
             {pathsVar ? (
