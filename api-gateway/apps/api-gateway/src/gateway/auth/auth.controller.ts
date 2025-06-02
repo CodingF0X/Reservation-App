@@ -62,6 +62,23 @@ export class AuthController {
     return result.data;
   }
 
+  @Post('auth/verify')
+  @SwaggerLogin(User)
+  async refresh(
+    @Res({ passthrough: true }) res: Response,
+    @Req() req: Request,
+    @RouteInfoDecorator() route: RouteInfo,
+  ) {
+    const result = await this.authService.verify(req, route);
+
+    const setCookie = result.headers['set-cookie'];
+    if (setCookie) {
+      res.setHeader('Set-Cookie', setCookie);
+    }
+    res.status(result.status);
+    return result.data;
+  }
+
   @Post('auth/logout')
   @SwaggerLogout(User)
   async logout(
