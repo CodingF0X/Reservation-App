@@ -31,7 +31,7 @@ each running independently and communicating over TCP and HTTP protocols.
 
 - Synchronous, decoupled microservices using TCP for inter-service calls
 
-- Domain-Driven Design (DDD) and clean, layered architecture and SOLID principles.
+- Clean, layered architecture and SOLID principles.
 
 - JWT-based authentication and role-based authorization with Passport on top of Nest.js
 
@@ -103,11 +103,14 @@ At a high level, Draftr lets users register, browse available properties, and ma
 
 ## Implementation
 
+![Solution Architecture](https://github.com/user-attachments/assets/41f18043-5f08-4579-a8e9-a5c190aaba06)
+
 ### Technologies Used
+
 - NestJS
 - MongoDB/Mongoose
 - Springboot
 - Docker
 - Grafana
-- - Prmetheus
-- - Loki
+  - Prmetheus
+  - Loki
