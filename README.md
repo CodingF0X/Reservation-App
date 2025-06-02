@@ -15,7 +15,9 @@ Draftr Reservation System is a distributed microservices application built to ha
 - Property-Category 
 - Reservations
 - Payments 
-- Notifications <br/>
+- Notifications 
+
+<br/>
 
 each running independently and communicating over TCP and HTTP protocols.
 
