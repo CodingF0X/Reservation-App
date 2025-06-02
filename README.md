@@ -97,4 +97,17 @@ At a high level, Draftr lets users register, browse available properties, and ma
 
 <br/>
 
-https://github.com/CodingF0X/Reservation-App/wiki/Function-Requirements
+[Link to Functional Requirements](https://github.com/CodingF0X/Reservation-App/wiki/Function-Requirements)
+
+## Architectural Design 
+
+## Implementation
+
+### Technologies Used
+- NestJS
+- MongoDB/Mongoose
+- Springboot
+- Docker
+- Grafana
+- - Prmetheus
+- - Loki
