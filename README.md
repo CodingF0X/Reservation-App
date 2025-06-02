@@ -109,10 +109,8 @@ At a high level, Draftr lets users register, browse available properties, and ma
 [Link to Functional Requirements](https://github.com/CodingF0X/Reservation-App/wiki/Function-Requirements)
 
 ## Architectural Design
-
-## Implementation
-
 ![Solution Architecture](https://github.com/user-attachments/assets/41f18043-5f08-4579-a8e9-a5c190aaba06)
+## Implementation
 
 ### Technologies Used
 
