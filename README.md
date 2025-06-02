@@ -6,19 +6,20 @@
 ## Summary
 Draftr Reservation System is a distributed microservices application built to handle property listings, user accounts, and reservations end-to-end. It consists of three main contexts (microservice groups): <br/>
 
-1.Eureka Server: A Spring Boot–based service registry that all other services use to find each other.
+1. Eureka Server: A Spring Boot–based service registry that all other services use to find each other.
 
-2.API Gateway: A NestJS gateway that routes incoming HTTP requests to the appropriate microservice, enforces authentication and circuit breaker pattern.
+2. API Gateway: A NestJS gateway that routes incoming HTTP requests to the appropriate microservice, enforces authentication and circuit breaker pattern.
 
-3.Draftr Microservices: A set of NestJS Microservices and that is: / 
+3. Draftr Microservices: A set of NestJS Microservices and that is: <br/>
 - Auth 
 - Property-Category 
 - Reservations
 - Payments 
-- Notifications
+- Notifications <br/>
+
 each running independently and communicating over TCP and HTTP protocols.
 
-*The primary goal of this application is to demonstrate key microservices and cloud-native concepts, such as:*
+**The primary goal of this application is to demonstrate key microservices and cloud-native concepts, such as:**
 
 - Service Discovery architectural pattern with Netflix Eureka
 
@@ -43,7 +44,7 @@ each running independently and communicating over TCP and HTTP protocols.
 ## Application Functionality
 At a high level, Draftr lets users register, browse available properties, and make reservations. Administrators can also manage properties and reservations. Behind the scenes, multiple microservices take part in each operation: <br/>
 
-1. *User Management (Auth Service)*
+1. **User Management (Auth Service)**
 
 - New users can register with email and password.
 
@@ -55,7 +56,7 @@ At a high level, Draftr lets users register, browse available properties, and ma
 
 <br/>
 
-2. Property Management (Property-Category Service)
+2. **Property Management (Property-Category Service)**
 
 - Both regular users and admins can add, update, view, or list properties in the system.
 
@@ -65,7 +66,7 @@ At a high level, Draftr lets users register, browse available properties, and ma
 
 <br/>
 
-3. Reservations (Reservations Service)
+3. **Reservations (Reservations Service)**
 
 - Once a user is logged in, they can request to book a property by its ID.
 
@@ -81,13 +82,13 @@ At a high level, Draftr lets users register, browse available properties, and ma
 
 <br/>
 
-4. Payment Processing (Payments Service)
+4. **Payment Processing (Payments Service)**
 
 - Receives a payment request from Reservations, processes the charge with Stripe, and returns success or failure.
 
 - Does not store credit card details; simply confirms whether the payment went through.
 
-5. Notifications (Notifications Service)
+5. **Notifications (Notifications Service)**
 - Listens for “reservation created” events emitted by the Reservations service.
 
 - Sends an email notification to the user who made the reservation, containing details like property name, dates, and payment confirmation.
