@@ -2,8 +2,14 @@
   <a href="" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
+<p align="center">
+
 # Draftr - A Property reservation system
+
+</p>
+
 ## Summary
+
 Draftr Reservation System is a distributed microservices application built to handle property listings, user accounts, and reservations end-to-end. It consists of three main contexts (microservice groups): <br/>
 
 1. Eureka Server: A Spring Boot–based service registry that all other services use to find each other.
@@ -11,11 +17,12 @@ Draftr Reservation System is a distributed microservices application built to ha
 2. API Gateway: A NestJS gateway that routes incoming HTTP requests to the appropriate microservice, enforces authentication and circuit breaker pattern.
 
 3. Draftr Microservices: A set of NestJS Microservices and that is: <br/>
-- Auth 
-- Property-Category 
+
+- Auth
+- Property-Category
 - Reservations
-- Payments 
-- Notifications 
+- Payments
+- Notifications
 
 <br/>
 
@@ -44,6 +51,7 @@ each running independently and communicating over TCP and HTTP protocols.
 <br/>
 
 ## Application Functionality
+
 At a high level, Draftr lets users register, browse available properties, and make reservations. Administrators can also manage properties and reservations. Behind the scenes, multiple microservices take part in each operation: <br/>
 
 1. **User Management (Auth Service)**
@@ -54,7 +62,7 @@ At a high level, Draftr lets users register, browse available properties, and ma
 
 - Authenticated users can log out, invalidating their session token.
 
-- Role-based guards ensure that certain routes are accessed with certain permissions.
+- Role-based guards : certain routes are accessed with certain permissions.
 
 <br/>
 
@@ -88,9 +96,10 @@ At a high level, Draftr lets users register, browse available properties, and ma
 
 - Receives a payment request from Reservations, processes the charge with Stripe, and returns success or failure.
 
-- Does not store credit card details; simply confirms whether the payment went through.
+- Does not store credit card details or any related data; simply confirms whether the payment went through.
 
 5. **Notifications (Notifications Service)**
+
 - Listens for “reservation created” events emitted by the Reservations service.
 
 - Sends an email notification to the user who made the reservation, containing details like property name, dates, and payment confirmation.
@@ -99,7 +108,7 @@ At a high level, Draftr lets users register, browse available properties, and ma
 
 [Link to Functional Requirements](https://github.com/CodingF0X/Reservation-App/wiki/Function-Requirements)
 
-## Architectural Design 
+## Architectural Design
 
 ## Implementation
 
