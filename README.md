@@ -21,7 +21,7 @@ Draftr Reservation System is a distributed microservices application built to ha
 
 each running independently and communicating over TCP and HTTP protocols.
 
-**The primary goal of this application is to demonstrate key microservices and cloud-native concepts [Please refer to the technical discussin](https://github.com/CodingF0X/Reservation-App/wiki/Technical-Discussions), such as:**
+**The primary goal of this application is to demonstrate key microservices and cloud-native concepts << [Please refer to the technical discussin](https://github.com/CodingF0X/Reservation-App/wiki/Technical-Discussions) >>, such as:**
 
 - Service Discovery architectural pattern with Netflix Eureka
 
