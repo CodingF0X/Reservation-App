@@ -7,7 +7,7 @@ import Settings from "./Settings";
 import Routes from "../Routes";
 import { useGetMe } from "../../hooks/useGetMe";
 
-const pages = [""];
+const pages = ["Properties"];
 
 const Header = () => {
   const { data } = useGetMe();
