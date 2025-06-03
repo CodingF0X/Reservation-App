@@ -9,7 +9,7 @@ const usePath = () => {
     Routes.subscribe((state) => {
       setPath(state.location.pathname);
     });
-  }, []);
+  }, [path]);
 
   return { path };
 };

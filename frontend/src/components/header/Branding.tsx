@@ -7,7 +7,7 @@ const Branding = () => {
   const { data } = useGetMe();
 
   const handleClick = () => {
-    if (data) {
+    if (data?.status === "alive") {
       Routes.navigate("/");
     } else {
       Routes.navigate("/login");

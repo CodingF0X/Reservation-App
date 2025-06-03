@@ -8,22 +8,26 @@ import Routes from "../Routes";
 interface GuardProps {
   children: JSX.Element;
 }
+
 const Guard = ({ children }: GuardProps) => {
-  const { data: user, loading } = useGetMe();
+  const { data: user, loading, refetch } = useGetMe();
   const { path } = usePath();
 
   useEffect(() => {
+    refetch();
+  }, [path, refetch]);
+
+  useEffect(() => {
+
     if (exludedRoutes.includes(path)) {
       return;
     }
 
-
-    if (!loading && !user) {
+    if (!loading && user?.status === "expired") {
       Routes.navigate("/login");
     }
   }, [path, loading, user]);
- 
-  
+
   return <>{exludedRoutes.includes(path) ? children : user && children}</>;
 };
 

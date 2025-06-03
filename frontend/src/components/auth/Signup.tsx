@@ -1,14 +1,14 @@
 import Auth from "./Auth";
 import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 // import { extractErrorMessage } from "../../utils/errors";
 import useLogin from "../../hooks/useLogin";
 import useCreateUser from "../../hooks/useCreateUser";
+import Routes from "../Routes";
 
 const Signup = () => {
-  const { register } = useCreateUser();
-  const [err, setErr] = useState("");
+  const { register, err, setErr } = useCreateUser();
+
   const { login } = useLogin();
   const handleSubmit = async (credentials: {
     email: string;
@@ -17,18 +17,14 @@ const Signup = () => {
   }) => {
     const { email, password, role } = credentials;
 
-    try {
-      if (!role) {
+     if (!role) {
         setErr("Role is required");
         return;
       }
 
       await register({ email, password, role });
       await login({ email, password });
-      setErr("");
-    } catch (error) {
-      setErr(error instanceof Error ? error.message : String(error));
-    }
+      Routes.navigate('/');
   };
   return (
     <div>
@@ -47,6 +43,7 @@ const Signup = () => {
             Click here to login
           </Typography>
         </Typography>
+        <Typography>{err}</Typography>
       </Auth>
     </div>
   );

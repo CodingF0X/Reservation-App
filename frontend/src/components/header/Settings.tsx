@@ -11,11 +11,9 @@ import React from "react";
 import onLogout from "../../utils/onLogout";
 import useLogout from "../../hooks/useLogout";
 import Routes from "../Routes";
-//import { useGetMe } from "../../hooks/useGetMe";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const Settings = () => {
-  //const { data: me } = useGetMe();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );

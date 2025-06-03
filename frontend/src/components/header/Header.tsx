@@ -17,7 +17,7 @@ const Header = () => {
         <Toolbar disableGutters>
           <Branding />
           <Desktop_Nav pages={pages} />
-          {data ? (
+          {data?.status === "alive" ? (
             <Settings />
           ) : (
             <Typography component="a" onClick={() => Routes.navigate("/login")}>

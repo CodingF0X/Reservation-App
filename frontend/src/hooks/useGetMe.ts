@@ -1,11 +1,8 @@
-// src/hooks/useGetMe.ts
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { API_URL } from "../constants/urls";
 
 interface MeResponse {
-  _id: string;
-  email: string;
-  imageURL?: string;
+  status: "alive" | "expired";
 }
 
 interface UseGetMeResult {
@@ -14,44 +11,46 @@ interface UseGetMeResult {
   error: string | null;
 }
 
-const useGetMe = (): UseGetMeResult => {
+const useGetMe = (): UseGetMeResult & { refetch: () => void } => {
   const [data, setData] = useState<MeResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchMe = async () => {
-      try {
-        const res = await fetch(`${API_URL}/auth/verify`, {
-          method: "POST",
-          credentials: "include",
-        });
+  const fetchMe = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_URL}/auth/verify`, {
+        method: "POST",
+        credentials: "include",
+      });
 
-        if (!res.ok) {
-          if (res.status === 401) {
-            setData(null);
-            return;
-          }
-          throw new Error(`Unexpected response: ${res.status}`);
+      if (!res.ok) {
+        if (res.status === 401) {
+          setData(null);
+          return;
         }
-
-        const json = (await res.json()) as MeResponse;
-        setData(json);
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("An unknown error occurred");
-        }
-      } finally {
-        setLoading(false);
+        throw new Error(`Unexpected response: ${res.status}`);
       }
-    };
 
-    fetchMe();
+      const json = (await res.json()) as MeResponse;
+      setData(json);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { data, loading, error };
+  useEffect(() => {
+    fetchMe();
+  }, [fetchMe]);
+
+  return { data, loading, error, refetch: fetchMe };
 };
 
 export { useGetMe };
