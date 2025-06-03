@@ -1,6 +1,4 @@
-import {
-  RouteInfo,
-} from '@app/common';
+import { RouteInfo } from '@app/common';
 import { Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
@@ -41,6 +39,13 @@ export class AuthService extends AbstractForwardReq {
     });
   }
 
+  async verify(req: Request, route: RouteInfo): Promise<AxiosResponse> {
+    return this.forwardReq(req, route, {
+      withCredentials: true,
+      validateStatus: () => true,
+    });
+  }
+
   async logout(req: Request, route: RouteInfo): Promise<AxiosResponse> {
     return this.forwardReq(req, route, {
       withCredentials: true,
@@ -62,11 +67,15 @@ export class AuthService extends AbstractForwardReq {
     });
   }
 
-  async updateUser(req:Request, route:RouteInfo, body: UpdateUserDto):Promise<AxiosResponse>{
+  async updateUser(
+    req: Request,
+    route: RouteInfo,
+    body: UpdateUserDto,
+  ): Promise<AxiosResponse> {
     return this.forwardReq(req, route, {
       withCredentials: true,
       validateStatus: () => true,
-      data: body
+      data: body,
     });
   }
 
