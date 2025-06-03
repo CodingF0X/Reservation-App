@@ -50,6 +50,44 @@ each running independently and communicating over TCP and HTTP protocols.
 
 <br/>
 
+## Installation
+### Quick Start
+
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/CodingF0X/Reservation-App.git
+    ```
+4.  run the app:
+    ```bash
+    docker-compose up
+    ```
+
+## Usage 
+After spinning up the docker images. Head to http://localhost:3009/api-docs where the API documention exists.
+Under each route, you will find details such as what is the body or the param needed to perform the respective API operation as well as the structure of the expected result.
+
+### Usage flow
+1. Register
+2. Login using the details you registered with.
+3. Test the rest of the API ops. 
+- example:
+  - Create a property.
+  - Then create a reservation
+  - Get reservations. you will find the one reserved with the Property _id and user_id.
+
+## Within the scope of this project and for testing purposes:
+### Exist the Nestjs app and the Grafana Tools under the following URLS :
+- API Gateway: http://localhost:3009/
+- Microservices
+    - Auth service: http://localhost:3001/
+    - Reservations service: http://localhost:3002/
+    - Payments service: http://localhost:3003/
+    - Notifications service: http://localhost:3004/
+    - Property-Catalog service: http://localhost:3006/
+- Swagger: http://localhost:3009/api-docs
+- Prometheus: http://localhost:9090/
+- Grafana: http://localhost:3000/
+
 ## Application Functionality
 
 At a high level, Draftr lets users register, browse available properties, and make reservations. Administrators can also manage properties and reservations. Behind the scenes, multiple microservices take part in each operation: <br/>
