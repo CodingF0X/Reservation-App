@@ -178,9 +178,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ p: 2 }}>
+    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ p: 2 , maxWidth: '50%'}}>
       <Stack spacing={4}>
-        {/* ====== General Details ====== */}
         <Typography variant="h5">Property Details</Typography>
         <TextField
           label="Name"
@@ -200,7 +199,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 
         <Divider />
 
-        {/* ====== Address ====== */}
         <Typography variant="h6">Address</Typography>
         <Stack
           direction={{ xs: "column", sm: "row" }}
@@ -264,7 +262,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 
         <Divider />
 
-        {/* ====== Pricing ====== */}
         <Typography variant="h6">Pricing</Typography>
         <Stack
           direction={{ xs: "column", sm: "row" }}
@@ -292,7 +289,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 
         <Divider />
 
-        {/* ====== Amenities ====== */}
         <Typography variant="h6">Amenities</Typography>
         <TextField
           label="Amenities (comma‐separated)"
@@ -304,7 +300,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 
         <Divider />
 
-        {/* ====== Availability ====== */}
         <Typography variant="h6">Availability</Typography>
         {formValues.availability.map((entry, idx) => (
           <Stack
@@ -398,7 +393,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 
         <Divider />
 
-        {/* ====== Submit ====== */}
         <Box sx={{ textAlign: "right", mt: 2 }}>
           <Button
             type="submit"

@@ -14,6 +14,10 @@ export default defineConfig({
         target: "http://localhost:3009/gateway",
         changeOrigin: true,
       },
+       "/properties": {
+        target: "http://localhost:3009/gateway",
+        changeOrigin: true,
+      },
     },
   },
 });
